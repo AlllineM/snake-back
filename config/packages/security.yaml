@@ -1,0 +1,51 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        # users_in_memory: { memory: null }
+        app_user_provider:
+          entity:
+            class: App\Entity\UserAliker
+            property: phone
+        # used to reload user from session & other features (e.g. switch_user)
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: lazy
+            http_basic: ~
+            provider: app_user_provider
+            guard:
+                authenticators:
+                    # - App\Security\LoginFormAuthenticator
+                    - App\Security\TokenAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
+
+          # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+         - { path: ^/api/v.0/user/add, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/api/v.0/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/api/v.0/request/get-outs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/api/v.0/request/get-ins, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/api/v.0/request/get-accepted, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/api/v.0, roles: ROLE_USER }
+         # - { path: ^/api/v.0, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+    encoders:
+     Symfony\Component\Security\Core\User\User:
+       algorithm: bcrypt
+       cost: 12
+     App\Entity\UserAliker:
+         algorithm: auto
+
