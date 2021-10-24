@@ -92,7 +92,7 @@ class ReactionRepository extends ServiceEntityRepository
      * @param $userId
      * @return mixed
      */
-    public function getMates($likes, $userId, $friends) {
+    public function getMates($likes, $userId) {
         return $this->createQueryBuilder('t')
             ->select(['IDENTITY(t.userAliker) as userAliker', 'count(t.id) as cnt', 'u.nick'])
             ->innerJoin('t.userAliker','u')

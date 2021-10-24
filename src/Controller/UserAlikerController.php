@@ -109,11 +109,11 @@ class UserAlikerController extends AlikerController
 
         if (!$likes) return $this->errorResponse('Юзер еще не лайкнул ни одного факта');
 
-        $friends = $doctrine->getRepository(Reaction::class)
-            ->getFriends($userId);
+       // $friends = $doctrine->getRepository(Reaction::class)
+         //   ->getFriends($userId);
 
         $mates = $doctrine->getRepository(Reaction::class)
-            ->getMates($likes, $userId, $friends);
+            ->getMates($likes, $userId);
 
         return $this->successResponse($mates);
     }
