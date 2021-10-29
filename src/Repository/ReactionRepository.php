@@ -71,20 +71,7 @@ class ReactionRepository extends ServiceEntityRepository
     {
         $likesOne = array_column($this->findLikes($userOne), 1);
         $likesTwo = array_column($this->findLikes($userTwo), 1);
-      //  $likes = array_intersect($likesOne, $likesTwo);
-
-
-echo '<pre>';
- var_dump($userOne);
- var_dump($likesTwo);
-
-
- var_dump($likesOne);
- var_dump($likesTwo);
-
-echo '</pre>';
-die();
-
+        $likes = array_intersect($likesOne, $likesTwo);
 
         return $this->getEntityManager()
             ->getRepository(Fact::class)

@@ -59,16 +59,10 @@ class ReactionController extends AlikerController
     public function getCommonFacts(Request $request)
     {
         $params = json_decode($request->getContent(), true);
-	var_dump($params['alikerId']);
-
 
         $facts = $this->getDoctrine()
             ->getRepository(Reaction::class)
             ->getCommonLikes($this->getUser()->getId(), $params['alikerId']);
-
-	var_dump($facts);
-die();
-
 
         return $this->successResponse($facts);
     }
