@@ -69,11 +69,20 @@ class ReactionRepository extends ServiceEntityRepository
     //todo: это тоже переписать, чтоб один запрос в базу был
     public function getCommonLikes($userOne, $userTwo)
     {
-//        $likesOne = array_column($this->findLikes($userOne), 1);
+        $likesOne = array_column($this->findLikes($userOne), 1);
         $likesTwo = array_column($this->findLikes($userTwo), 1);
       //  $likes = array_intersect($likesOne, $likesTwo);
 
+
+echo '<pre>';
+ var_dump($userOne);
  var_dump($likesTwo);
+
+
+ var_dump($likesOne);
+ var_dump($likesTwo);
+
+echo '</pre>';
 die();
 
 
