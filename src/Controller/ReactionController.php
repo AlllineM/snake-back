@@ -15,7 +15,7 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class ReactionController extends AlikerController
 {
-    //todo: Еще сделать, чтобы не обавлялись дубли. Мурррк! :)
+    //todo: Еще сделать, чтобы не добавлялись дубли. Мурррк! :)
     /**
      * Добавить оценку факта
      * @Route("/api/v.0/reaction/add", methods={"OPTIONS", "POST"})
@@ -53,6 +53,7 @@ class ReactionController extends AlikerController
     /**
      * Выгружает все общие факты двух юзеров
      * @Route("/api/v.0/reaction/get/common", methods={"OPTIONS", "POST"})
+     * @param Request $request
      * @return Response
      */
     public function getCommonFacts(Request $request)
