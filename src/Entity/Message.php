@@ -34,6 +34,11 @@ class Message
      */
     private $datetime;
 
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $body;
+
 
     public function getId(): ?int
     {
@@ -72,6 +77,18 @@ class Message
     public function setDatetime(\DateTimeInterface $datetime): self
     {
         $this->datetime = $datetime;
+
+        return $this;
+    }
+
+    public function getBody(): ?string
+    {
+        return $this->body;
+    }
+
+    public function setBody(string $body): self
+    {
+        $this->body = $body;
 
         return $this;
     }
