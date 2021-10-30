@@ -39,8 +39,12 @@ class MessageController extends AlikerController
             $userFrom = $this->getDoctrine()
                 ->getRepository(UserAliker::class)
                 ->findOneById($this->getUser()->getId());
+            $userTo = $this->getDoctrine()
+                ->getRepository(UserAliker::class)
+                ->findOneById($data['userTo']);
 
             $message->setUserFrom($userFrom);
+            $message->setUserTo($userTo);
             $message->setDateTime(new \DateTime());
 
             $entityManager = $this->getDoctrine()->getManager();

@@ -6,6 +6,8 @@ use App\Entity\Fact;
 use App\Entity\Message;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType
+;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
@@ -30,13 +32,6 @@ class SendMessageFormType extends AbstractType
                         'min' => 1,
                         'minMessage' => 'Не меньше {{ limit }} знаков',
                         'max' => 1000,
-                    ]),
-                ],
-            ])
-            ->add('userTo', IntegerType::class, [
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Необходим id адресата',
                     ]),
                 ],
             ])
