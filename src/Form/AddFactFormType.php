@@ -32,13 +32,6 @@ class AddFactFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('userTo', IntegerType::class, [
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Необходим id адресата',
-                    ]),
-                ],
-            ])
         ;
     }
 
