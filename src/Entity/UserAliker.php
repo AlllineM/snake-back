@@ -83,6 +83,11 @@ class UserAliker implements UserInterface
      */
     private $incomingRequests;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Chat::class, mappedBy="userOne")
+     */
+    private $chats;
+
 
     public function __construct()
     {
