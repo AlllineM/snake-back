@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Fact;
+use App\Entity\Message;
 use App\Form\AddFactFormType;
+use App\Form\SendMessageFormType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -16,9 +18,39 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class MessageController extends AlikerController
 {
-    public function addMessage($body, $userTo)
+    /**
+     * Отправить сообщение
+     * @Route("/api/v.0/message/send", methods={"POST", "OPTIONS"})
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @return Response
+     * @throws \Exception
+     */
+    public function sendMessage(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
+        $data = json_decode($request->getContent(), true);
 
+        $message = new Message();
+        $form = $this->createForm(SendMessageFormType::class, $message);
+        $form->submit($data);
+
+        //todo: добавить валидацию
+        if ($form->isSubmitted()) {
+            $userFrom = $this->getDoctrine()
+                ->getRepository(UserAliker::class)
+                ->findOneById($this->getUser()->getId());
+
+            $message->setUserFrom($userFrom);
+            $message->setDateTime(new \DateTime());
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($message);
+            $entityManager->flush();
+
+            return $this->successResponse(['messageId' => $message->getId()]);
+        } else  {
+            return $this->formError();
+        }
     }
 
     public function getChats()
@@ -52,40 +84,5 @@ class MessageController extends AlikerController
         return $this->successResponse($data);
     }
 
-
-    /**
-     * Добавить новый факт
-     * @Route("/api/v.0/fact/add", methods={"POST", "OPTIONS"})
-     * @param Request $request
-     * @param UserPasswordEncoderInterface $passwordEncoder
-     * @return Response
-     * @throws \Exception
-     */
-    public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
-    {
-       $data = json_decode($request->getContent(), true);
-
-        $fact = new Fact();
-        $form = $this->createForm(AddFactFormType::class, $fact);
-        $form->submit($data);
-
-        //todo: добавить валидацию
-        if ($form->isSubmitted()) {
-            $user = $this->getDoctrine()
-                ->getRepository(UserAliker::class)
-                ->findOneById($this->getUser()->getId());
-
-            $fact->setAuthor($user);
-            $fact->setDateTime(new \DateTime());
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($fact);
-            $entityManager->flush();
-
-            return $this->successResponse(['factId' => $user->getId()]);
-        } else  {
-            return $this->formError();
-        }
-    }
 
 }

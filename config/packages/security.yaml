@@ -36,9 +36,6 @@ security:
     access_control:
          - { path: ^/api/v.0/user/add, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/api/v.0/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-         - { path: ^/api/v.0/request/get-outs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-         - { path: ^/api/v.0/request/get-ins, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-         - { path: ^/api/v.0/request/get-accepted, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/api/v.0, roles: ROLE_USER }
          # - { path: ^/api/v.0, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 

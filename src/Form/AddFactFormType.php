@@ -23,12 +23,19 @@ class AddFactFormType extends AbstractType
             ->add('body', TextType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Пожалуйста, заполните поле',
+                        'message' => 'Сообщение не может быть пустым',
                     ]),
                     new Length([
                         'min' => 3,
                         'minMessage' => 'Не меньше {{ limit }} знаков',
                         'max' => 200,
+                    ]),
+                ],
+            ])
+            ->add('userTo', IntegerType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Необходим id адресата',
                     ]),
                 ],
             ])
