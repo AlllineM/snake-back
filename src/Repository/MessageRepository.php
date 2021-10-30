@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Message;
 use App\Entity\Fact;
 use App\Entity\Reaction;
+use App\Entity\UserAliker;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -19,6 +20,63 @@ class MessageRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Message::class);
+    }
+
+    /**
+     * Возвращает переписку авторизованного юзера с userId
+     * @param $currentUserId
+     * @param $userId
+     * @return mixed
+     */
+    public function getMessages($currentUserId, $userId)
+    {
+       $messagesTo = $this->getMessagesTo($currentUserId, $userId);
+       $messagesFrom = $this->getMessagesFrom($currentUserId, $userId);
+       var_dump($messagesTo);
+       var_dump($messagesFrom);
+       die();
+    }
+
+    /**
+     * Выгружает все сообщения, которые писал авторизованный юзер юзеру userTo
+     * @param $currentUserId
+     * @param $userTo
+     * @return mixed
+     */
+    public function getMessagesTo($currentUserId, $userTo)
+    {
+        return $this->createQueryBuilder('m')
+            ->select('m.body, m.user_from_id, m.user_to_id, m.datetime')
+            ->where('m.userFrom = :userFrom')
+            ->where('m.userTo = :userTo')
+            ->setParameters([
+                'userFrom' => $currentUserId,
+                'userTo'=> $userTo,
+            ])
+            ->orderBy('m.datetime', 'DESC')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * Выгружает все сообщения, которые писал $userFrom авторизованному юзеру
+     * @param $currentUserId
+     * @param $userFrom
+     * @return mixed
+     */
+    public function getMessagesFrom($currentUserId, $userFrom)
+    {
+        return $this->createQueryBuilder('m')
+            ->select('m.body, m.user_from_id, m.user_to_id, m.datetime')
+            ->where('m.userFrom = :userFrom')
+            ->where('m.userTo = :userTo')
+            ->setParameters([
+                'userFrom' => $userFrom,
+                'userTo'=> $currentUserId,
+            ])
+            ->orderBy('m.datetime', 'DESC')
+            ->getQuery()
+            ->getArrayResult();
     }
 
 

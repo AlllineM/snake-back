@@ -6,6 +6,7 @@ use App\Entity\Fact;
 use App\Entity\Message;
 use App\Form\AddFactFormType;
 use App\Form\SendMessageFormType;
+use App\Repository\MessageRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -64,6 +65,13 @@ class MessageController extends AlikerController
 
     public function getMessages($userId)
     {
+        $currentUserId = $this->getDoctrine()
+            ->getRepository(UserAliker::class)
+            ->findOneById($this->getUser()->getId());
+
+        $messages = $this->getDoctrine()
+            ->getRepository(MessageRepository::class)
+            ->getMessages($currentUserId, $userId);
 
     }
 
