@@ -76,7 +76,7 @@ class MessageController extends AlikerController
             ->findOneById($this->getUser()->getId());
 
         $messages = $this->getDoctrine()
-            ->getRepository(MessageRepository::class)
+            ->getRepository(Message::class)
             ->getMessages($currentUserId, $params['userId']);
 
         return $this->successResponse($messages);

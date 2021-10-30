@@ -31,8 +31,9 @@ class MessageRepository extends ServiceEntityRepository
     public function getMessages($currentUserId, $userId)
     {
         return $this->createQueryBuilder('m')
-            ->select('m.body, m.user_from_id, m.user_to_id, m.datetime')
-            ->where('(m.userFrom = :currentUser AND m.userTo = :userId) OR (m.userFrom = :userId AND m.userTo = :currentUser))')
+            ->select(['m.body', 'm.datetime', 'u.id as userTo'])
+            ->leftJoin('m.userTo','u')
+            ->where('(m.userFrom = :currentUser AND m.userTo = :userId) OR (m.userFrom = :userId AND m.userTo = :currentUser)')
             ->setParameters([
                 'currentUser' => $currentUserId,
                 'userId'=> $userId,

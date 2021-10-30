@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\RequestRepository;
+use App\Repository\MessageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
