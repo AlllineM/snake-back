@@ -6,9 +6,9 @@ use App\Repository\RequestRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ChatRepository::class)
+ * @ORM\Entity(repositoryClass=MessageRepository::class)
  */
-class Chat
+class Message
 {
     /**
      * @ORM\Id()
@@ -18,13 +18,13 @@ class Chat
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=UserAliker::class, inversedBy="chatsFrom")
+     * @ORM\ManyToOne(targetEntity=UserAliker::class, inversedBy="messagesFrom")
      * @ORM\JoinColumn(nullable=false)
      */
     private $userFrom;
 
     /**
-     * @ORM\ManyToOne(targetEntity=UserAliker::class, inversedBy="chatsTo")
+     * @ORM\ManyToOne(targetEntity=UserAliker::class, inversedBy="messagesTo")
      * @ORM\JoinColumn(nullable=false)
      */
     private $userTo;

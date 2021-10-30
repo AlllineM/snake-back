@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Chat;
+use App\Entity\Message;
 use App\Entity\Fact;
 use App\Entity\Reaction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -14,11 +14,11 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @method Fact[]    findAll()
  * @method Fact[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ChatRepository extends ServiceEntityRepository
+class MessageRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Chat::class);
+        parent::__construct($registry, Message::class);
     }
 
 

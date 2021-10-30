@@ -84,14 +84,14 @@ class UserAliker implements UserInterface
     private $incomingRequests;
 
     /**
-     * @ORM\OneToMany(targetEntity=Chat::class, mappedBy="userFrom")
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="userFrom")
      */
-    private $chatsFrom;
+    private $messagesFrom;
 
     /**
-     * @ORM\OneToMany(targetEntity=Chat::class, mappedBy="userTo")
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="userTo")
      */
-    private $chatsTo;
+    private $messagesTo;
 
 
     public function __construct()
@@ -100,8 +100,8 @@ class UserAliker implements UserInterface
         $this->reactions = new ArrayCollection();
         $this->outgoingRequests = new ArrayCollection();
         $this->incomingRequests = new ArrayCollection();
-        $this->chatsFrom = new ArrayCollection();
-        $this->chatsTo = new ArrayCollection();
+        $this->messagesFrom = new ArrayCollection();
+        $this->messagesTo = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -367,36 +367,36 @@ class UserAliker implements UserInterface
     }
 
     /**
-     * @return Collection|Chat[]
+     * @return Collection|Message[]
      */
-    public function getChatsFrom(): Collection
+    public function getMessagesFrom(): Collection
     {
-        return $this->chatsFrom;
+        return $this->messagesFrom;
     }
 
-    public function addChatFrom(Chat $chatFrom): self
+    public function addMessageFrom(Message $messageFrom): self
     {
-        if (!$this->chatsFrom->contains($chatFrom)) {
-            $this->chatsFrom[] = $chatFrom;
-            $chatFrom->setUserFrom($this);
+        if (!$this->messagesFrom->contains($messageFrom)) {
+            $this->messagesFrom[] = $messageFrom;
+            $messageFrom->setUserFrom($this);
         }
 
         return $this;
     }
 
     /**
-     * @return Collection|Chat[]
+     * @return Collection|Message[]
      */
-    public function getChatsTo(): Collection
+    public function getMessagesTo(): Collection
     {
-        return $this->chatsTo;
+        return $this->messagesTo;
     }
 
-    public function addChatTo(Chat $chatTo): self
+    public function addMessageTo(Message $messageTo): self
     {
-        if (!$this->chatsTo->contains($chatTo)) {
-            $this->chatsTo[] = $chatTo;
-            $chatTo->setUserFrom($this);
+        if (!$this->messagesTo->contains($messageTo)) {
+            $this->messagesTo[] = $messageTo;
+            $messageTo->setUserFrom($this);
         }
 
         return $this;

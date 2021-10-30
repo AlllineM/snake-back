@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\UserAliker;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class ChatController extends AlikerController
+class MessageController extends AlikerController
 {
     public function addMessage($body, $userTo)
     {
