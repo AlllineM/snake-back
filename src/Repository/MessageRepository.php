@@ -30,55 +30,17 @@ class MessageRepository extends ServiceEntityRepository
      */
     public function getMessages($currentUserId, $userId)
     {
-       $messagesTo = $this->getMessagesTo($currentUserId, $userId);
-       $messagesFrom = $this->getMessagesFrom($currentUserId, $userId);
-       var_dump($messagesTo);
-       var_dump($messagesFrom);
-       die();
-    }
-
-    /**
-     * Выгружает все сообщения, которые писал авторизованный юзер юзеру userTo
-     * @param $currentUserId
-     * @param $userTo
-     * @return mixed
-     */
-    public function getMessagesTo($currentUserId, $userTo)
-    {
         return $this->createQueryBuilder('m')
             ->select('m.body, m.user_from_id, m.user_to_id, m.datetime')
-            ->where('m.userFrom = :userFrom')
-            ->where('m.userTo = :userTo')
+            ->where('(m.userFrom = :currentUser AND m.userTo = :userId) OR (m.userFrom = :userId AND m.userTo = :currentUser))')
             ->setParameters([
-                'userFrom' => $currentUserId,
-                'userTo'=> $userTo,
+                'currentUser' => $currentUserId,
+                'userId'=> $userId,
             ])
             ->orderBy('m.datetime', 'DESC')
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
     }
-
-    /**
-     * Выгружает все сообщения, которые писал $userFrom авторизованному юзеру
-     * @param $currentUserId
-     * @param $userFrom
-     * @return mixed
-     */
-    public function getMessagesFrom($currentUserId, $userFrom)
-    {
-        return $this->createQueryBuilder('m')
-            ->select('m.body, m.user_from_id, m.user_to_id, m.datetime')
-            ->where('m.userFrom = :userFrom')
-            ->where('m.userTo = :userTo')
-            ->setParameters([
-                'userFrom' => $userFrom,
-                'userTo'=> $currentUserId,
-            ])
-            ->orderBy('m.datetime', 'DESC')
-            ->getQuery()
-            ->getArrayResult();
-    }
-
 
     /**
      * Возвращает рандомный факт

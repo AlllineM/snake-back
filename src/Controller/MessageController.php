@@ -63,15 +63,23 @@ class MessageController extends AlikerController
 
     }
 
-    public function getMessages($userId)
+    /**
+     * Возвращает переписку с userId
+     * @Route("/api/v.0/message/get", methods={"POST", "OPTIONS"})
+     * @return Response
+     */
+    public function getMessages(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
+        $params = json_decode($request->getContent(), true);
         $currentUserId = $this->getDoctrine()
             ->getRepository(UserAliker::class)
             ->findOneById($this->getUser()->getId());
 
         $messages = $this->getDoctrine()
             ->getRepository(MessageRepository::class)
-            ->getMessages($currentUserId, $userId);
+            ->getMessages($currentUserId, $params['userId']);
+
+        return $this->successResponse($messages);
 
     }
 
