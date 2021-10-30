@@ -84,9 +84,14 @@ class UserAliker implements UserInterface
     private $incomingRequests;
 
     /**
-     * @ORM\OneToMany(targetEntity=Chat::class, mappedBy="userOne")
+     * @ORM\OneToMany(targetEntity=Chat::class, mappedBy="userFrom")
      */
-    private $chats;
+    private $chatsFrom;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Chat::class, mappedBy="userTo")
+     */
+    private $chatsTo;
 
 
     public function __construct()
@@ -95,6 +100,8 @@ class UserAliker implements UserInterface
         $this->reactions = new ArrayCollection();
         $this->outgoingRequests = new ArrayCollection();
         $this->incomingRequests = new ArrayCollection();
+        $this->chatsFrom = new ArrayCollection();
+        $this->chatsTo = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -354,6 +361,42 @@ class UserAliker implements UserInterface
             if ($incomingRequest->getUserTo() === $this) {
                 $incomingRequest->setUserTo(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Chat[]
+     */
+    public function getChatsFrom(): Collection
+    {
+        return $this->chatsFrom;
+    }
+
+    public function addChatFrom(Chat $chatFrom): self
+    {
+        if (!$this->chatsFrom->contains($chatFrom)) {
+            $this->chatsFrom[] = $chatFrom;
+            $chatFrom->setUserFrom($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Chat[]
+     */
+    public function getChatsTo(): Collection
+    {
+        return $this->chatsTo;
+    }
+
+    public function addChatTo(Chat $chatTo): self
+    {
+        if (!$this->chatsTo->contains($chatTo)) {
+            $this->chatsTo[] = $chatTo;
+            $chatTo->setUserFrom($this);
         }
 
         return $this;
