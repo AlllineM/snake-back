@@ -73,6 +73,7 @@ class MessageRepository extends ServiceEntityRepository
             ->select(['count(m.id)', 'u.id as userFrom'])
             ->leftJoin('m.userFrom','u')
             ->where('m.userTo = :currentUser')
+            ->andWhere('m.status = :status')
             ->setParameters([
                 'currentUser' => $currentUserId,
                 'status' => Message::NEW,
