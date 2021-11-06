@@ -30,6 +30,8 @@ class MessageRepository extends ServiceEntityRepository
      */
     public function getMessages($currentUserId, $userId)
     {
+        $this->updateStatus($currentUserId, $userId);
+
         return $this->createQueryBuilder('m')
             ->select(['m.body', 'm.datetime', 'u.id as userTo'])
             ->leftJoin('m.userTo','u')
@@ -43,69 +45,27 @@ class MessageRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * Возвращает рандомный факт
-     * @return mixed
-     * @throws \Exception
-     */
-    public function findRandom($user)
+    public function updateStatus($currentUserId, $userId)
     {
-        //выгружаем все оценки
-        $likes = array_column(
-            $this->getEntityManager()
-                ->getRepository(Reaction::class)
-                ->findAllReactions($user),
-            1);
-        $likes[] = 0; //нужно для юзеров, у которых еще нет лайков совсем
-
-        //выгружаем все факты без оценок
-        $newFacts = $this->createQueryBuilder('o')
-            ->select('o.id')
-            ->where('o.id NOT IN(:val)')
-            ->setParameter('val', $likes)
+        $unread = $this->createQueryBuilder('m')
+            ->select('m')
+           // ->leftJoin('m.userTo','u')
+            ->where('m.userFrom = :userId AND m.userTo = :currentUser')
+            ->andWhere('m.status = :status')
+            ->setParameters([
+                'currentUser' => $currentUserId,
+                'userId' => $userId,
+                'status' => Message::NEW,
+            ])
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
 
-        //выбираем рандомный факт без оценки
-        $randomFact = array_rand($newFacts);
-        $randomFact = $newFacts[$randomFact]['id'];
-
-        return $this->createQueryBuilder('f')
-            ->select(['f.id', 'f.body'])
-            ->where('f.id = :val')
-            ->setParameters(['val' => $randomFact])
-            ->orderBy('f.id', 'ASC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getResult()[0];
+        foreach ($unread as $message) {
+            $message->setStatus(Message::READ);
+            $entityManager = $this->getEntityManager();
+            $entityManager->persist($message);
+            $entityManager->flush();
+        }
     }
-
-    // /**
-    //  * @return Fact[] Returns an array of Fact objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('f.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Fact
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
+

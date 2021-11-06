@@ -46,6 +46,7 @@ class MessageController extends AlikerController
 
             $message->setUserFrom($userFrom);
             $message->setUserTo($userTo);
+            $message->setStatus(Message::NEW);
             $message->setDateTime(new \DateTime());
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -82,27 +83,4 @@ class MessageController extends AlikerController
         return $this->successResponse($messages);
 
     }
-
-    /**
-     * Получить рандомное высказывание
-     * @Route("/api/v.0/fact/get-random", methods={"GET", "OPTIONS"})
-     * @param Request $request
-     * @return Response|null
-     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
-     */
-    public function getRandom(Request $request)
-    {
-        $fact = $this->getDoctrine()
-            ->getRepository(Fact::class)
-            ->findRandom($this->getUser()->getId());
-
-        if (!$fact) return $this->errorResponse('Что-то пошло не так, ни один факт не найден');
-
-        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
-        $data = $serializer->normalize($fact, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'body']]);
-
-        return $this->successResponse($data);
-    }
-
-
 }
