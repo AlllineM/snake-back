@@ -49,7 +49,6 @@ class MessageRepository extends ServiceEntityRepository
     {
         $unread = $this->createQueryBuilder('m')
             ->select('m')
-           // ->leftJoin('m.userTo','u')
             ->where('m.userFrom = :userId AND m.userTo = :currentUser')
             ->andWhere('m.status = :status')
             ->setParameters([
@@ -67,5 +66,19 @@ class MessageRepository extends ServiceEntityRepository
             $entityManager->flush();
         }
     }
-}
 
+    public function getUnread($currentUserId)
+    {
+         return $this->createQueryBuilder('m')
+            ->select(['count(m.id)', 'u.id as userFrom'])
+            ->leftJoin('m.userFrom','u')
+            ->where('m.userTo = :currentUser')
+            ->setParameters([
+                'currentUser' => $currentUserId,
+                'status' => Message::NEW,
+            ])
+            ->groupBy('u.id')
+            ->getQuery()
+            ->getResult();
+    }
+}

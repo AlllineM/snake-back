@@ -59,9 +59,26 @@ class MessageController extends AlikerController
         }
     }
 
+    /**
+     * Получить количество непрочитанный сообщений
+     * @Route("/api/v.0/message/get-unread-count", methods={"GET", "OPTIONS"})
+     * @param Request $request
+     */
+    public function getUnreadCount(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    {
+        $currentUserId = $this->getDoctrine()
+            ->getRepository(UserAliker::class)
+            ->findOneById($this->getUser()->getId());
+
+        $data = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->getUnread($currentUserId);
+
+        return $this->successResponse($data);
+    }
+
     public function getChats()
     {
-
     }
 
     /**
