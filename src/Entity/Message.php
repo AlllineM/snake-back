@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Message
 {
+    const NEW = 0;
+    const READ = 1;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -38,6 +41,11 @@ class Message
      * @ORM\Column(type="text")
      */
     private $body;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $status;
 
 
     public function getId(): ?int
@@ -89,6 +97,18 @@ class Message
     public function setBody(string $body): self
     {
         $this->body = $body;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
