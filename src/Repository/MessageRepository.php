@@ -88,7 +88,7 @@ class MessageRepository extends ServiceEntityRepository
                 'status' => Message::NEW,
             ])
             ->getQuery()
-            ->getResult();
+            ->getResult()[0];
     }
 
     /**
