@@ -79,7 +79,7 @@ class MessageRepository extends ServiceEntityRepository
      */
     public function getUnreadGeneral($currentUserId)
     {
-         $data = $this->createQueryBuilder('m')
+         return $this->createQueryBuilder('m')
             ->select('count(m.id) as cnt')
             ->where('m.userTo = :currentUser')
             ->andWhere('m.status = :status')
