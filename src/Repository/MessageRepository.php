@@ -45,6 +45,11 @@ class MessageRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Делает прочитанными все сообщения от userId (меняет статус с NEW на READ)
+     * @param $currentUserId
+     * @param $userId
+     */
     public function updateStatus($currentUserId, $userId)
     {
         $unread = $this->createQueryBuilder('m')
@@ -67,10 +72,34 @@ class MessageRepository extends ServiceEntityRepository
         }
     }
 
-    public function getUnread($currentUserId)
+    /**
+     * Возвращает общее число непрочитанных сообщений
+     * @param $currentUserId
+     * @return mixed
+     */
+    public function getUnreadGeneral($currentUserId)
     {
          return $this->createQueryBuilder('m')
-            ->select(['count(m.id)', 'u.id as userFrom'])
+            ->select('count(m.id) as cnt')
+            ->where('m.userTo = :currentUser')
+            ->andWhere('m.status = :status')
+            ->setParameters([
+                'currentUser' => $currentUserId,
+                'status' => Message::NEW,
+            ])
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Возвращает количество непрочитанных сообщений от каждого юзера отдельно
+     * @param $currentUserId
+     * @return mixed
+     */
+    public function getUnread($currentUserId)
+    {
+         $rows = $this->createQueryBuilder('m')
+            ->select(['count(m.id) as cnt', 'u.id as userFrom'])
             ->leftJoin('m.userFrom','u')
             ->where('m.userTo = :currentUser')
             ->andWhere('m.status = :status')
@@ -81,5 +110,13 @@ class MessageRepository extends ServiceEntityRepository
             ->groupBy('u.id')
             ->getQuery()
             ->getResult();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $result[$row['userFrom']] => $row['cnt'];
+        }
+
+        return $result;
     }
+
 }

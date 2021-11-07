@@ -60,11 +60,29 @@ class MessageController extends AlikerController
     }
 
     /**
-     * Получить количество непрочитанный сообщений
-     * @Route("/api/v.0/message/get-unread-count", methods={"GET", "OPTIONS"})
+     * Получить общее количество непрочитанный сообщений
+     * @Route("/api/v.0/message/get-unread-general", methods={"GET", "OPTIONS"})
      * @param Request $request
      */
-    public function getUnreadCount(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function getUnreadGeneral(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    {
+        $currentUserId = $this->getDoctrine()
+            ->getRepository(UserAliker::class)
+            ->findOneById($this->getUser()->getId());
+
+        $data = $this->getDoctrine()
+            ->getRepository(Message::class)
+            ->getUnreadGeneral($currentUserId);
+
+        return $this->successResponse($data);
+    }
+
+    /**
+     * Получить количество непрочитанный сообщений отдельно для каждого юзера
+     * @Route("/api/v.0/message/get-unread", methods={"GET", "OPTIONS"})
+     * @param Request $request
+     */
+    public function getUnread(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $currentUserId = $this->getDoctrine()
             ->getRepository(UserAliker::class)
