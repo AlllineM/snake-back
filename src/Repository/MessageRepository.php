@@ -116,7 +116,7 @@ die();
 
         $result = [];
         foreach ($rows as $row) {
-            $result[$row['userFrom']] => $row['cnt'];
+            $result[$row['userFrom']] = $rows['cnt'];
         }
 
         return $result;
