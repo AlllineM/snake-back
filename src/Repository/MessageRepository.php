@@ -89,9 +89,6 @@ class MessageRepository extends ServiceEntityRepository
             ])
             ->getQuery()
             ->getResult();
-
-         var_dump($data);
-die();
     }
 
     /**
