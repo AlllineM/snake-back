@@ -103,7 +103,7 @@ class ReactionRepository extends ServiceEntityRepository
             ->setParameters(['likes'=> $likes, 'user' => $userId])
             ->groupBy('t.userAliker', 'u.nick')
             ->orderBy('cnt', 'DESC')
-            ->setMaxResults(5)
+           // ->setMaxResults(5)
             ->getQuery()
             ->getResult();
     }
