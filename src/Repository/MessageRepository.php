@@ -113,7 +113,7 @@ class MessageRepository extends ServiceEntityRepository
 
         $result = [];
         foreach ($rows as $row) {
-            $result[$row['userFrom']] = $rows['cnt'];
+            $result[$row['userFrom']] = $row['cnt'];
         }
 
         return $result;
