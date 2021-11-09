@@ -23,8 +23,7 @@ class AlikerController extends AbstractController
         $data = ['status' => 200, 'result' => $result];
         $jsonContent = json_encode($data);
 
-        //todo: Кроссдомены
-        return new Response($jsonContent, 200, ['Access-Control-Allow-Origin' => '*']);
+        return new Response($jsonContent, 200, ['Access-Control-Allow-Origin' => getenv('FRONT_URL')]);
     }
 
     /**
@@ -37,8 +36,7 @@ class AlikerController extends AbstractController
         $data = ['status' => 400, 'error' => $errorMessage];
         $jsonContent = json_encode($data);
 
-        //todo: Кроссдомены
-        return new Response($jsonContent, 400, ['Access-Control-Allow-Origin' => '*']);
+        return new Response($jsonContent, 400, ['Access-Control-Allow-Origin' => getenv('FRONT_URL')]);
     }
 
     /**
