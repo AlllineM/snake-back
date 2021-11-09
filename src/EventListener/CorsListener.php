@@ -26,7 +26,7 @@ final class CorsListener implements EventSubscriberInterface
     {
         $response = $event->getResponse();
         if ($response) {
-            $response->headers->set('Access-Control-Allow-Origin', getenv('FRONT_URL'));
+            $response->headers->set('Access-Control-Allow-Origin', "http://aliker.ru");
             $response->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH');
             $response->headers->set('Access-Control-Allow-Headers', 'content-type, Authorization');
         }
@@ -57,7 +57,7 @@ final class CorsListener implements EventSubscriberInterface
 
         $response = $event->getResponse();
         if ($response) {
-            $response->headers->set('Access-Control-Allow-Origin', getenv('FRONT_URL'));
+            $response->headers->set('Access-Control-Allow-Origin', "http://aliker.ru");
             $response->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH');
             $response->headers->set('Access-Control-Allow-Headers', 'content-type, Authorization');
         }
