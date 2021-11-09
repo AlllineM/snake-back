@@ -25,9 +25,8 @@ final class CorsListener implements EventSubscriberInterface
     public function onKernelException(ExceptionEvent $event): void
     {
         $response = $event->getResponse();
-        //todo: Кроссдомен прописать нормально и в конфиг
         if ($response) {
-            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Allow-Origin', getenv('FRONT_URL'));
             $response->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH');
             $response->headers->set('Access-Control-Allow-Headers', 'content-type, Authorization');
         }
@@ -57,9 +56,8 @@ final class CorsListener implements EventSubscriberInterface
         }
 
         $response = $event->getResponse();
-        //todo: Кроссдомен прописать нормально и в конфиг
         if ($response) {
-            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Allow-Origin', getenv('FRONT_URL'));
             $response->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH');
             $response->headers->set('Access-Control-Allow-Headers', 'content-type, Authorization');
         }
