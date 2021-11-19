@@ -12,6 +12,7 @@ class Reaction
     const LIKE = 1;
     const SKIP = 0;
     const SAME = 2;
+    const DISLIKE = 3;
 
     /**
      * @ORM\Id()
