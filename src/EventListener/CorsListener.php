@@ -13,6 +13,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 final class CorsListener implements EventSubscriberInterface
 {
+    private $frontUrl;
+
+    public function __construct($frontUrl)
+    {
+        $this->frontUrl = $frontUrl;
+    }
+
     public static function getSubscribedEvents(): array
     {
         return [
@@ -26,8 +33,8 @@ final class CorsListener implements EventSubscriberInterface
     {
         $response = $event->getResponse();
         if ($response) {
-            $response->headers->set('Access-Control-Allow-Origin', "http://aliker.ru");
-            $response->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH');
+            $response->headers->set('Access-Control-Allow-Origin', $this->frontUrl);
+            $response->headers->set('Access-Control-Allow-Methods', 'GET,POST');
             $response->headers->set('Access-Control-Allow-Headers', 'content-type, Authorization');
         }
     }
@@ -57,8 +64,8 @@ final class CorsListener implements EventSubscriberInterface
 
         $response = $event->getResponse();
         if ($response) {
-            $response->headers->set('Access-Control-Allow-Origin', "http://aliker.ru");
-            $response->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH');
+            $response->headers->set('Access-Control-Allow-Origin', $this->frontUrl);
+            $response->headers->set('Access-Control-Allow-Methods', 'GET,POST');
             $response->headers->set('Access-Control-Allow-Headers', 'content-type, Authorization');
         }
     }
