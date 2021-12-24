@@ -180,7 +180,7 @@ class ReactionRepository extends ServiceEntityRepository
         $stmt->execute(['userId' => $currentUser]);
 
         // возвращает массив массивов (т.e. сырой набор данных)
-        return $stmt->fetchAllAssociative();
+        return $stmt->fetchAll();
     }
 
     // /**
