@@ -108,6 +108,22 @@ class ReactionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getNewMates($currentUser)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT * FROM product p
+            WHERE p.price > :price
+            ORDER BY p.price ASC
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['price' => $currentUser]);
+
+        // возвращает массив массивов (т.e. сырой набор данных)
+        return $stmt->fetchAllAssociative();
+    }
+
     // /**
     //  * @return Reaction[] Returns an array of Reaction objects
     //  */

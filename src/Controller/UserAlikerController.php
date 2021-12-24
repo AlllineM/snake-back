@@ -124,10 +124,10 @@ class UserAlikerController extends AlikerController
         $userId = $this->getUser()->getId();
         $doctrine = $this->getDoctrine();
 
-        $likes = $doctrine->getRepository(Reaction::class)
-            ->findLikes($userId);
+        $result = $doctrine->getRepository(Reaction::class)
+            ->getNewMates($userId);
 
-        return $this->successResponse($mates);
+        return $this->successResponse($result);
     }
 
     /**
