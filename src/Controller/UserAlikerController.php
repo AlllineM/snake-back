@@ -116,6 +116,21 @@ class UserAlikerController extends AlikerController
     }
 
     /**
+     * @Route("/api/v.0/user/get/new-mates", methods={"OPTIONS", "GET"})
+     * @return Response
+     */
+    public function getNewMates()
+    {
+        $userId = $this->getUser()->getId();
+        $doctrine = $this->getDoctrine();
+
+        $likes = $doctrine->getRepository(Reaction::class)
+            ->findLikes($userId);
+
+        return $this->successResponse($mates);
+    }
+
+    /**
      * Возвращает баланс текущего(авторизованного) юзера
      * @Route("/api/v.0/user/get/balance", methods={"OPTIONS", "GET"})
      * @return Response
