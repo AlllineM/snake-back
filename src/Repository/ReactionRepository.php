@@ -113,12 +113,71 @@ class ReactionRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            SELECT * FROM product p
-            WHERE p.price > :price
-            ORDER BY p.price ASC
+            with cur_r AS 
+                (SELECT fact_id, status
+                FROM reaction
+                WHERE user_aliker_id = :userId),
+            author as (
+                select
+                    4 as user_a,
+                    cur_r.status as cur_us,
+                    fact.author_id as user_aliker_id,
+                    count(1) as cnt
+                from fact
+                INNER JOIN cur_r
+                    ON cur_r.fact_id = fact.id
+                group by fact.author_id, cur_r.status
+            ),
+            common_r as (    
+                SELECT reaction.status as user_a,
+                    cur_r.status as cur_us,
+                    reaction.user_aliker_id,
+                    count(1) as cnt
+                FROM reaction
+                INNER JOIN cur_r
+                    ON reaction.fact_id = cur_r.fact_id
+                WHERE reaction.user_aliker_id <> :userId
+                group by reaction.status, cur_r.status, reaction.user_aliker_id
+                ), 
+            common as (
+                select * 
+                from common_r
+                union select * 
+                from author
+            ),
+            wish as (
+                select 
+                    common.user_aliker_id, 
+                    sum(common.cnt * weight.weight) as rating
+                from common
+                left JOIN weight
+                    ON common.cur_us = weight.reaction_one
+                        and common.cur_us = weight.reaction_two
+                group by common.user_aliker_id
+                ),
+            result as (
+                select 
+                    common.user_aliker_id, 
+                    sum(common.cnt * weight.weight) as rating
+                from common
+                left JOIN weight
+                    ON common.cur_us = weight.reaction_one
+                        and common.user_a = weight.reaction_two
+                group by common.user_aliker_id
+                )
+            select 
+                result.user_aliker_id, 
+                result.rating as rating,
+                wish.rating as wish,
+                CEILING((result.rating / wish.rating) * 100) as percent
+            from result
+            INNER JOIN wish
+                ON result.user_aliker_id = wish.user_aliker_id
+            WHERE result.rating > 0
+            order by rating desc
             ';
         $stmt = $conn->prepare($sql);
-        $stmt->execute(['price' => $currentUser]);
+        $stmt->execute(['userId' => $currentUser]);
 
         // возвращает массив массивов (т.e. сырой набор данных)
         return $stmt->fetchAllAssociative();
