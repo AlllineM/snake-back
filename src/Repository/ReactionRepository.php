@@ -30,13 +30,15 @@ class ReactionRepository extends ServiceEntityRepository
         return constant(Reaction::class . '::' . $statusAlias);
     }
 
+    /**
+     * Выгружает факты для карточки мэйта
+     * @param $userId
+     * @param $alikerId
+     * @return array|int|string
+     */
     public function getMatchDetail($userId, $alikerId)
     {
-        $temp = $this->getPersonalLikes($userId, $alikerId);
-        echo '<pre>';
-        var_dump($temp);
-        echo '</pre>';
-        die();
+        return $this->getPersonalLikes($userId, $alikerId);
     }
 
     /**
