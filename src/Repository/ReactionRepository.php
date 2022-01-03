@@ -46,7 +46,7 @@ class ReactionRepository extends ServiceEntityRepository
     public function getPersonalLikes($authorId, $userId)
     {
         return $this->createQueryBuilder('r')
-            ->select('r.fact')
+            ->select('IDENTITY(r.fact)')
             //->leftJoin('r.fact', 'f')
             ->where('r.userAliker = :userId')
             ->andWhere('(r.status = ' . Reaction::LIKE . ' or r.status = ' . Reaction::SAME . ')')
