@@ -36,9 +36,14 @@ class ReactionRepository extends ServiceEntityRepository
      * @param $alikerId
      * @return array|int|string
      */
-    public function getMatchDetail($userId, $alikerId)
+    public function getMatchDetail($currentUserId, $alikerId)
     {
-        return $this->getPersonalLikes($userId, $alikerId);
+        $result = [];
+        $result['mine'] = $this->getPersonalLikes($currentUserId, $alikerId);
+        $result['yours'] = $this->getPersonalLikes($alikerId, $currentUserId);
+        $result['common'] = $this->getCommonReactions($currentUserId, $alikerId);
+
+        return $result;
     }
 
     /**
@@ -145,7 +150,39 @@ class ReactionRepository extends ServiceEntityRepository
         ]);
 
         return $stmt->fetchAll();
+    }
 
+    public function getCommonReactions($userOneId, $userTwoId)
+    {
+        $positive = '(' . Reaction::LIKE . ', ' . Reaction::SAME . ')';
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            with r_one AS 
+                (SELECT fact_id, status
+                FROM reaction
+                WHERE user_aliker_id = :userOneId 
+                    AND status <> 0),
+            with r_two AS 
+                (SELECT fact_id, status
+                FROM reaction
+                WHERE user_aliker_id = :userTwoId
+                AND status <> 0)
+            select fact.body, reaction.status
+                from r_one
+                inner join r_two on r_one.fact_id = r_two.fact_id
+                inner join fact on r_one.fact_id = fact.id
+                where (r_one.status = ' . Reaction::DISLIKE . ' and r_two.status = ' . Reaction::DISLIKE . ')
+                    or (r_one.status in ' . $positive . ' and r_two.status in ' . $positive . ')
+            ';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            'userOneId' => $userOneId,
+            'userTwoId' => $userTwoId,
+        ]);
+
+        return $stmt->fetchAll();
     }
 
     /**
