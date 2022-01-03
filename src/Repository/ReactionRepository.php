@@ -40,29 +40,6 @@ class ReactionRepository extends ServiceEntityRepository
     }
 
     /**
-     * Выгружает факты, которые написаны authorId и понравились userId (like либо same)
-     * @param $authorId
-     * @param $userId
-     * @return array|int|string
-     */
-    public function getPersonalLikes($authorId, $userId)
-    {
-        return $this->createQueryBuilder('r')
-            ->select('IDENTITY(r.fact)')
-           // ->innerJoin('r.fact', 'f')
-            ->where('r.userAliker = :userId')
-           // ->andWhere('f.author = :authorId')
-            ->andWhere('(r.status = ' . Reaction::LIKE . ' or r.status = ' . Reaction::SAME . ')')
-            ->setParameters([
-                'userId' => $userId,
-             //   'authorId' => $authorId,
-            ])
-            ->orderBy('r.id', 'ASC')
-            ->getQuery()
-            ->getArrayResult();
-    }
-
-    /**
      * Выгружает лайки юзера
      * @param $userId
      * @param string $alias
@@ -140,7 +117,33 @@ class ReactionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Выгружает факты, которые написаны authorId и понравились userId (like либо same)
+     * @param $authorId
+     * @param $userId
+     * @return array|int|string
+     */
+    public function getPersonalLikes($authorId, $userId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
 
+        $sql = '
+            select fact.body, reaction.status
+                from fact
+                inner join reaction on reaction.fact_id = fact.id
+            where fact.author_id = :authorId
+                and reaction.user_aliker_id = :userId
+            ';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            'authorId' => $authorId,
+            'userId' => $userId,
+        ]);
+
+        return $stmt->fetchAll();
+
+    }
 
     /**
      * Основной алгоритм) Ага. //todo: Разобрать в нормальный вид
