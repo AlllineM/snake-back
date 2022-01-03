@@ -45,7 +45,8 @@ class ReactionRepository extends ServiceEntityRepository
      */
     public function getPersonalLikes($authorId, $userId)
     {
-        return $this->createQueryBuilder('r')
+        //return
+            $temp = $this->createQueryBuilder('r')
             ->select('IDENTITY(r.fact)')
             ->innerJoin('r.fact', 'f')
             ->where('r.userAliker = :userId')
@@ -56,8 +57,9 @@ class ReactionRepository extends ServiceEntityRepository
                 'authorId' => $authorId,
             ])
             ->orderBy('r.id', 'ASC')
-            ->getQuery()
-            ->getArrayResult();
+            ->getQuery();
+            var_dump($temp);
+            //->getArrayResult();
     }
 
     /**
