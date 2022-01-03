@@ -49,8 +49,12 @@ class ReactionRepository extends ServiceEntityRepository
             ->select('IDENTITY(r.fact)')
             ->innerJoin('r.fact', 'f')
             ->where('r.userAliker = :userId')
+            ->andWhere('f.author = :authorId')
             ->andWhere('(r.status = ' . Reaction::LIKE . ' or r.status = ' . Reaction::SAME . ')')
-            ->setParameter('userId', $userId)
+            ->setParameters([
+                'userId' => $userId,
+                'authorId' => $authorId,
+            ])
             ->orderBy('r.id', 'ASC')
             ->getQuery()
             ->getArrayResult();
