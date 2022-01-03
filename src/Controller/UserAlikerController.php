@@ -132,23 +132,6 @@ class UserAlikerController extends AlikerController
     }
 
     /**
-     * Выгружает карточку мэйта
-     * @Route("/api/v.0/user/get/match-detail", methods={"OPTIONS", "POST"})
-     * @param Request $request
-     * @return Response
-     */
-    public function getMatchDetail($request)
-    {
-        $params = json_decode($request->getContent(), true);
-
-        $facts = $this->getDoctrine()
-            ->getRepository(Reaction::class)
-            ->getMatchDetail($this->getUser()->getId(), $params['alikerId']);
-
-        return $this->successResponse($facts);
-    }
-
-    /**
      * Возвращает инфу о текущем юзере
      * @Route("/api/v.0/user/get/profile-info", methods={"OPTIONS", "GET"})
      * @return Response

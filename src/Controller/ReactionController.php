@@ -66,4 +66,21 @@ class ReactionController extends AlikerController
 
         return $this->successResponse($facts);
     }
+
+    /**
+     * Выгружает карточку мэйта
+     * @Route("/api/v.0/reaction/get/match-detail", methods={"OPTIONS", "POST"})
+     * @param Request $request
+     * @return Response
+     */
+    public function getMatchDetail(Request $request)
+    {
+        $params = json_decode($request->getContent(), true);
+
+        $facts = $this->getDoctrine()
+            ->getRepository(Reaction::class)
+            ->getMatchDetail($this->getUser()->getId(), $params['alikerId']);
+
+        return $this->successResponse($facts);
+    }
 }
