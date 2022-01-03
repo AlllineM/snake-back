@@ -33,7 +33,9 @@ class ReactionRepository extends ServiceEntityRepository
     public function getMatchDetail($userId, $alikerId)
     {
         $temp = $this->getPersonalLikes($userId, $alikerId);
+        echo '<pre>';
         var_dump($temp);
+        echo '</pre>';
         die();
     }
 
@@ -47,13 +49,13 @@ class ReactionRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('r')
             ->select('IDENTITY(r.fact)')
-            ->innerJoin('r.fact', 'f')
+           // ->innerJoin('r.fact', 'f')
             ->where('r.userAliker = :userId')
-            ->andWhere('f.author = :authorId')
+           // ->andWhere('f.author = :authorId')
             ->andWhere('(r.status = ' . Reaction::LIKE . ' or r.status = ' . Reaction::SAME . ')')
             ->setParameters([
                 'userId' => $userId,
-                'authorId' => $authorId,
+             //   'authorId' => $authorId,
             ])
             ->orderBy('r.id', 'ASC')
             ->getQuery()

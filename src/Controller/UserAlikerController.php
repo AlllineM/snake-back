@@ -149,6 +149,19 @@ class UserAlikerController extends AlikerController
     }
 
     /**
+     * Возвращает инфу о текущем юзере
+     * @Route("/api/v.0/user/get/profile-info", methods={"OPTIONS", "GET"})
+     * @return Response
+     */
+    public function getProfileInfo(Request $request)
+    {
+       $result['email'] = $this->getUser()->getEmail();
+       $result['id'] = $this->getUser()->getId();
+
+       return $this->successResponse($result);
+    }
+
+    /**
      * Возвращает баланс текущего(авторизованного) юзера
      * @Route("/api/v.0/user/get/balance", methods={"OPTIONS", "GET"})
      * @return Response
