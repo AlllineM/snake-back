@@ -163,12 +163,12 @@ class ReactionRepository extends ServiceEntityRepository
                 FROM reaction
                 WHERE user_aliker_id = :userOneId 
                     AND status <> 0),
-            with r_two AS 
+            r_two AS 
                 (SELECT fact_id, status
                 FROM reaction
                 WHERE user_aliker_id = :userTwoId
                 AND status <> 0)
-            select fact.body, reaction.status
+            select fact.body, status
                 from r_one
                 inner join r_two on r_one.fact_id = r_two.fact_id
                 inner join fact on r_one.fact_id = fact.id
