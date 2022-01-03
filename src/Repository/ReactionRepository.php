@@ -47,7 +47,7 @@ class ReactionRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('r')
             ->select('r.fact')
-            ->leftJoin('r.fact', 'f')
+            //->leftJoin('r.fact', 'f')
             ->where('r.userAliker = :userId')
             ->andWhere('(r.status = ' . Reaction::LIKE . ' or r.status = ' . Reaction::SAME . ')')
             ->setParameter('userId', $userId)
