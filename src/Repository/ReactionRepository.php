@@ -133,6 +133,7 @@ class ReactionRepository extends ServiceEntityRepository
                 inner join reaction on reaction.fact_id = fact.id
             where fact.author_id = :authorId
                 and reaction.user_aliker_id = :userId
+                and (reaction.status = ' . Reaction::LIKE . ' or reaction.status = ' . Reaction::SAME . ')
             ';
 
         $stmt = $conn->prepare($sql);
