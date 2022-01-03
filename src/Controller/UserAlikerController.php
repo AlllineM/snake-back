@@ -116,6 +116,7 @@ class UserAlikerController extends AlikerController
     }
 
     /**
+     * Список мэйтов по новому алгоритму
      * @Route("/api/v.0/user/get/new-mates", methods={"OPTIONS", "GET"})
      * @return Response
      */
@@ -128,6 +129,23 @@ class UserAlikerController extends AlikerController
             ->getNewMates($userId);
 
         return $this->successResponse($result);
+    }
+
+    /**
+     * Выгружает карточку мэйта
+     * @Route("/api/v.0/user/get/match-detail", methods={"OPTIONS", "POST"})
+     * @param Request $request
+     * @return Response
+     */
+    public function getMatchDetail($request)
+    {
+        $params = json_decode($request->getContent(), true);
+
+        $facts = $this->getDoctrine()
+            ->getRepository(Reaction::class)
+            ->getMatchDetail($this->getUser()->getId(), $params['alikerId']);
+
+        return $this->successResponse($facts);
     }
 
     /**

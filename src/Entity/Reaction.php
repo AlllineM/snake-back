@@ -33,7 +33,6 @@ class Reaction
     private $date_time;
 
     /**
-     * Оценка лайк - 1, пропустил - 0
      * @ORM\Column(type="integer")
      */
     private $status;

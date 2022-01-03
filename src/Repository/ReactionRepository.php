@@ -30,6 +30,32 @@ class ReactionRepository extends ServiceEntityRepository
         return constant(Reaction::class . '::' . $statusAlias);
     }
 
+    public function getMatchDetail($userId, $alikerId)
+    {
+        $temp = $this->getPersonalLikes($userId, $alikerId);
+        var_dump($temp);
+        die();
+    }
+
+    /**
+     * Выгружает факты, которые написаны authorId и понравились userId (like либо same)
+     * @param $authorId
+     * @param $userId
+     * @return array|int|string
+     */
+    public function getPersonalLikes($authorId, $userId)
+    {
+        return $this->createQueryBuilder('r')
+            ->select('r.fact')
+            ->leftJoin('r.fact', 'f')
+            ->where('r.userAliker = :userId')
+            ->andWhere('(r.status = ' . Reaction::LIKE . ' or r.status = ' . Reaction::SAME . ')')
+            ->setParameter('userId', $userId)
+            ->orderBy('r.id', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
     /**
      * Выгружает лайки юзера
      * @param $userId
@@ -41,7 +67,7 @@ class ReactionRepository extends ServiceEntityRepository
         return $this->createQueryBuilder($alias)
             ->select('IDENTITY(r.fact)')
             ->where('r.userAliker = :val')
-            ->andWhere('r.status = 1')
+            ->andWhere('r.status = ' . Reaction::LIKE)
             ->setParameter('val', $userId)
             ->orderBy('r.id', 'ASC')
             ->getQuery()
@@ -108,6 +134,14 @@ class ReactionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+
+
+    /**
+     * Основной алгоритм) Ага. //todo: Разобрать в нормальный вид
+     * @param $currentUser
+     * @return mixed[]
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function getNewMates($currentUser)
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -179,7 +213,6 @@ class ReactionRepository extends ServiceEntityRepository
         $stmt = $conn->prepare($sql);
         $stmt->execute(['userId' => $currentUser]);
 
-        // возвращает массив массивов (т.e. сырой набор данных)
         return $stmt->fetchAll();
     }
 

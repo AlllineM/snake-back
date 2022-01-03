@@ -62,7 +62,8 @@ class ReactionController extends AlikerController
 
         $facts = $this->getDoctrine()
             ->getRepository(Reaction::class)
-            ->getCommonLikes($this->getUser()->getId(), $params['alikerId']);
+           // ->getCommonLikes($this->getUser()->getId(), $params['alikerId']);
+            ->getMatchDetail($this->getUser()->getId(), $params['alikerId']);
 
         return $this->successResponse($facts);
     }
