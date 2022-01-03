@@ -152,34 +152,37 @@ class ReactionRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
     }
 
-    public function getCommonReactions($userOneId, $userTwoId)
+    public function getCommonReactions($currentUserId, $alikerId)
     {
         $positive = '(' . Reaction::LIKE . ', ' . Reaction::SAME . ')';
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            with r_one AS 
+            with r_curr AS 
                 (SELECT fact_id, status
                 FROM reaction
-                WHERE user_aliker_id = :userOneId 
+                WHERE user_aliker_id = :currentUserId 
                     AND status <> 0),
-            r_two AS 
+            r_aliker AS 
                 (SELECT fact_id, status
                 FROM reaction
-                WHERE user_aliker_id = :userTwoId
+                WHERE user_aliker_id = :alikerId
                 AND status <> 0)
-            select fact.body, status
-                from r_one
-                inner join r_two on r_one.fact_id = r_two.fact_id
-                inner join fact on r_one.fact_id = fact.id
-                where (r_one.status = ' . Reaction::DISLIKE . ' and r_two.status = ' . Reaction::DISLIKE . ')
-                    or (r_one.status in ' . $positive . ' and r_two.status in ' . $positive . ')
+            select 
+                fact.body, 
+                r_curr.status as current_status, 
+                r_aliker.status as aliker_status
+            from r_curr
+            inner join r_aliker on r_curr.fact_id = r_aliker.fact_id
+            inner join fact on r_curr.fact_id = fact.id
+            where (r_curr.status = ' . Reaction::DISLIKE . ' and r_aliker.status = ' . Reaction::DISLIKE . ')
+                or (r_curr.status in ' . $positive . ' and r_aliker.status in ' . $positive . ')
             ';
 
         $stmt = $conn->prepare($sql);
         $stmt->execute([
-            'userOneId' => $userOneId,
-            'userTwoId' => $userTwoId,
+            'currentUserId' => $currentUserId,
+            'alikerId' => $alikerId,
         ]);
 
         return $stmt->fetchAll();
