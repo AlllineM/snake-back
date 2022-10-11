@@ -264,9 +264,6 @@
     "symfony/options-resolver": {
         "version": "v5.0.8"
     },
-    "symfony/orm-pack": {
-        "version": "v1.0.8"
-    },
     "symfony/polyfill-intl-icu": {
         "version": "v1.16.0"
     },
@@ -278,9 +275,6 @@
     },
     "symfony/polyfill-php73": {
         "version": "v1.14.0"
-    },
-    "symfony/profiler-pack": {
-        "version": "v1.0.4"
     },
     "symfony/property-access": {
         "version": "v5.0.5"
