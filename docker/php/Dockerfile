@@ -1,3 +1,2 @@
-FROM ubuntu:20.04
-RUN apt update
-RUN apt install -y php-pgsql
+FROM php:7.4-fpm
+RUN docker-php-ext-install pdo pdo_pgsql
