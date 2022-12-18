@@ -23,7 +23,7 @@ class AlikerController extends AbstractController
         $data = ['status' => 200, 'result' => $result];
         $jsonContent = json_encode($data);
 
-        return new Response($jsonContent, 200, ['Access-Control-Allow-Origin' => $this->getParameter('app.front_url')]);
+        return new Response($jsonContent, 200, ['Access-Control-Allow-Origin' => '*']);
     }
 
     /**
@@ -36,7 +36,7 @@ class AlikerController extends AbstractController
         $data = ['status' => 400, 'error' => $errorMessage];
         $jsonContent = json_encode($data);
 
-        return new Response($jsonContent, 400, ['Access-Control-Allow-Origin' => $this->getParameter('app.front_url')]);
+        return new Response($jsonContent, 400, ['Access-Control-Allow-Origin' => '*']);
     }
 
     /**
