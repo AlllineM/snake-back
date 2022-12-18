@@ -51,6 +51,7 @@ final class CorsListener implements EventSubscriberInterface
 
         if (Request::METHOD_OPTIONS === $method) {
             $response = new Response();
+            $response->headers->set('Access-Control-Allow-Origin', '*');
             $event->setResponse($response);
         }
     }
