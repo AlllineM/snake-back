@@ -48,6 +48,8 @@ class FactRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
 
+        if (empty($newFacts)) return null;
+
         //выбираем рандомный факт без оценки
         $randomFact = array_rand($newFacts);
         $randomFact = $newFacts[$randomFact]['id'];

@@ -15,12 +15,15 @@ class AlikerController extends AbstractController
 {
     /**
      * Общая упаковка успешных ответов апи
+     *
      * @param $result array
+     * @param int $status По умолчанию 200. Иначе код внутренней ошибки
+     *
      * @return Response
      */
-    public function successResponse(array $result) : Response
+    public function successResponse(array $result, int $status = 200) : Response
     {
-        $data = ['status' => 200, 'result' => $result];
+        $data = ['status' => $status, 'result' => $result];
         $jsonContent = json_encode($data);
 
         return new Response($jsonContent, 200, ['Access-Control-Allow-Origin' => '*']);

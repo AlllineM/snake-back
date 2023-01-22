@@ -25,11 +25,15 @@ class FactController extends AlikerController
      */
     public function getRandom(Request $request)
     {
+        /** @var Fact $fact */
         $fact = $this->getDoctrine()
             ->getRepository(Fact::class)
             ->findRandom($this->getUser()->getId());
 
-        if (!$fact) return $this->errorResponse('Что-то пошло не так, ни один факт не найден');
+        if (!$fact) return $this->successResponse(
+            ['message' => 'Нет фактов без оценок'],
+            404
+        );
 
         $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
         $data = $serializer->normalize($fact, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'body']]);
