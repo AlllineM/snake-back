@@ -26,21 +26,25 @@ class FactRepository extends ServiceEntityRepository
      * @return mixed
      * @throws \Exception
      */
-    public function findRandom($user)
+    public function findRandom($userId)
     {
         //выгружаем все оценки
         $likes = array_column(
             $this->getEntityManager()
                 ->getRepository(Reaction::class)
-                ->findAllReactions($user),
+                ->findAllReactions($userId),
             1);
         $likes[] = 0; //нужно для юзеров, у которых еще нет лайков совсем
 
         //выгружаем все факты без оценок
-        $newFacts = $this->createQueryBuilder('o')
-            ->select('o.id')
-            ->where('o.id NOT IN(:val)')
-            ->setParameter('val', $likes)
+        $newFacts = $this->createQueryBuilder('new_facts')
+            ->select('new_facts.id')
+            ->where('new_facts.id NOT IN(:likes)')
+            ->andWhere('new_facts.author <> :user_id')
+            ->setParameters([
+                'likes' => $likes,
+                'user_id' => $userId,
+            ])
             ->getQuery()
             ->getArrayResult();
 
