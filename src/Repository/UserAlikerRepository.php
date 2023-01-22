@@ -52,15 +52,4 @@ class UserAlikerRepository extends ServiceEntityRepository implements PasswordUp
         ;
     }
 
-    /*
-    public function findOneBySomeField($value): ?UserAliker
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

@@ -18,7 +18,7 @@ class AlikerController extends AbstractController
      * @param $result array
      * @return Response
      */
-    public function successResponse($result)
+    public function successResponse(array $result) : Response
     {
         $data = ['status' => 200, 'result' => $result];
         $jsonContent = json_encode($data);

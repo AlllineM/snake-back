@@ -71,6 +71,8 @@ class UserAlikerController extends AlikerController
     public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $data = json_decode($request->getContent(), true);
+
+        /** @var $user UserAliker */
         $user = $this->getDoctrine()
             ->getRepository(UserAliker::class)
             ->findOneByEmail($data['email']);
@@ -93,6 +95,22 @@ class UserAlikerController extends AlikerController
         } else {
             return $this->errorResponse('Неверный пароль');
         }
+    }
+
+    /**
+     * Получить список мэйтов
+     * @Route("/api/v.0/user/get/loguot", methods={"OPTIONS", "GET"})
+     */
+    public function logout()
+    {
+        $user = $this->getUser();
+        $user->setApiToken(null);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->successResponse(['status' => 'ok']);
     }
 
     /**
