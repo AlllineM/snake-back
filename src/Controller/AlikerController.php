@@ -16,12 +16,12 @@ class AlikerController extends AbstractController
     /**
      * Общая упаковка успешных ответов апи
      *
-     * @param $result array
+     * @param $result
      * @param int $status По умолчанию 200. Иначе код внутренней ошибки
      *
      * @return Response
      */
-    public function successResponse(array $result, int $status = 200) : Response
+    public function successResponse($result, int $status = 200) : Response
     {
         $data = ['status' => $status, 'result' => $result];
         $jsonContent = json_encode($data);
