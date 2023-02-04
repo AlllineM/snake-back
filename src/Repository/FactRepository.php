@@ -20,7 +20,6 @@ class FactRepository extends ServiceEntityRepository
         parent::__construct($registry, Fact::class);
     }
 
-
     /**
      * Возвращает рандомный факт
      * @return mixed
@@ -64,32 +63,20 @@ class FactRepository extends ServiceEntityRepository
             ->getResult()[0];
     }
 
-    // /**
-    //  * @return Fact[] Returns an array of Fact objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Возвращает все факты определенного автора
+     * @param $author
+     *
+     * @return float|int|mixed|string
+     */
+    public function getAllByAuthor($author)
     {
         return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
+            ->select(['f.id', 'f.body'])
+            ->andWhere('f.author = :val')
+            ->setParameter('val', $author)
             ->orderBy('f.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Fact
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

@@ -17,13 +17,13 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class FactController extends AlikerController
 {
     /**
-     * Получить рандомное высказывание
+     * Получить рандомный факт
      * @Route("/api/v.0/fact/get-random", methods={"GET", "OPTIONS"})
-     * @param Request $request
+     *
      * @return Response|null
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      */
-    public function getRandom(Request $request)
+    public function getRandom() : Response
     {
         /** @var Fact $fact */
         $fact = $this->getDoctrine()
@@ -40,7 +40,6 @@ class FactController extends AlikerController
 
         return $this->successResponse($data);
     }
-
 
     /**
      * Добавить новый факт
@@ -77,4 +76,28 @@ class FactController extends AlikerController
         }
     }
 
+    /**
+     * Получить все факты, которые написал юзер
+     * @Route("/api/v.0/fact/get-all", methods={"GET", "OPTIONS"})
+     *
+     * @return Response|null
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     */
+    public function getAll() : Response
+    {
+        /** @var Fact $fact */
+        $facts = $this->getDoctrine()
+            ->getRepository(Fact::class)
+            ->getAllByAuthor($this->getUser()->getId());
+
+        if (!$facts) return $this->successResponse(
+            ['message' => 'Вы еще не написали ни одного факта о себе'],
+            404
+        );
+
+        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+        $data = $serializer->normalize($facts, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'body']]);
+
+        return $this->successResponse($data);
+    }
 }
