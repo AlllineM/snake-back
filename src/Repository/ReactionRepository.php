@@ -13,6 +13,8 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @method Reaction[]    findAll()
  * @method Reaction[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
+
+//todo: Тут прям нужен рефакторинг, пока еще не поздно)
 class ReactionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -64,13 +66,25 @@ class ReactionRepository extends ServiceEntityRepository
             ->getArrayResult();
     }
 
+    public function findAllReactions($userId)
+    {
+        return $this->createQueryBuilder('r')
+            ->select(['f.body', 'r.status'])
+            ->leftJoin('r.fact','f')
+            ->where('r.userAliker = :user_id')
+            ->setParameter('user_id', $userId)
+            ->orderBy('r.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * Выгружает айдишники фактов, которые юзер уже оценил
      * @param $userId
      * @param string $alias
      * @return array
      */
-    public function findAllReactions($userId, $alias = 'r')
+    public function findAllReactionsIds($userId, $alias = 'r')
     {
         return $this->createQueryBuilder($alias)
             ->select('IDENTITY(r.fact)')

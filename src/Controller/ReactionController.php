@@ -83,4 +83,19 @@ class ReactionController extends AlikerController
 
         return $this->successResponse($facts);
     }
+
+    /**
+     * Выгружает все оценки юзера
+     * @Route("/api/v.0/reaction/get/all", methods={"OPTIONS", "GET"})
+     *
+     * @return Response
+     */
+    public function getAll()
+    {
+        $reactions = $this->getDoctrine()
+            ->getRepository(Reaction::class)
+            ->findAllReactions($this->getUser()->getId());
+
+        return $this->successResponse($reactions);
+    }
 }

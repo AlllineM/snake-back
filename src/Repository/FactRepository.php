@@ -31,7 +31,7 @@ class FactRepository extends ServiceEntityRepository
         $likes = array_column(
             $this->getEntityManager()
                 ->getRepository(Reaction::class)
-                ->findAllReactions($userId),
+                ->findAllReactionsIds($userId),
             1);
         $likes[] = 0; //нужно для юзеров, у которых еще нет лайков совсем
 
@@ -75,7 +75,7 @@ class FactRepository extends ServiceEntityRepository
             ->select(['f.id', 'f.body'])
             ->andWhere('f.author = :val')
             ->setParameter('val', $author)
-            ->orderBy('f.id', 'ASC')
+            ->orderBy('f.id', 'DESC')
             ->getQuery()
             ->getResult();
     }
