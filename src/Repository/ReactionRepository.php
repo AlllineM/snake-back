@@ -73,7 +73,7 @@ class ReactionRepository extends ServiceEntityRepository
             ->leftJoin('r.fact','f')
             ->where('r.userAliker = :user_id')
             ->setParameter('user_id', $userId)
-            ->orderBy('r.id', 'ASC')
+            ->orderBy('r.id', 'DESC')
             ->getQuery()
             ->getResult();
     }
