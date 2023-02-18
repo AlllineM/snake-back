@@ -146,6 +146,7 @@ class UserAlikerController extends AlikerController
         $result = $doctrine->getRepository(Reaction::class)
             ->getNewMates($userId);
 
+
         return $this->successResponse($result);
     }
 

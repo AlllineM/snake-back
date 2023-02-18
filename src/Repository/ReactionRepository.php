@@ -126,15 +126,11 @@ class ReactionRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('t')
             ->select(['IDENTITY(t.userAliker) as userAliker', 'count(t.id) as cnt', 'u.nick'])
             ->innerJoin('t.userAliker','u')
-            ->where('t.status = :status')
+            ->where('t.status = 1')
             ->andWhere('t.userAliker <> :user')
             ->andWhere('t.fact IN(:likes)')
             ->andWhere('t.fact IN(:likes)')
-            ->setParameters([
-                'status' => Reaction::LIKE,
-                'likes'=> $likes,
-                'user' => $userId
-            ])
+            ->setParameters(['likes'=> $likes, 'user' => $userId])
             ->groupBy('t.userAliker', 'u.nick')
             ->orderBy('cnt', 'DESC')
            // ->setMaxResults(5)
@@ -180,12 +176,12 @@ class ReactionRepository extends ServiceEntityRepository
                 (SELECT fact_id, status
                 FROM reaction
                 WHERE user_aliker_id = :currentUserId 
-                ),
+                    AND status <> 0),
             r_aliker AS 
                 (SELECT fact_id, status
                 FROM reaction
                 WHERE user_aliker_id = :alikerId
-                )
+                AND status <> 0)
             select 
                 fact.body, 
                 r_curr.status as current_status, 
@@ -216,14 +212,14 @@ class ReactionRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = '
+        $sql = "
             with cur_r AS 
                 (SELECT fact_id, status
                 FROM reaction
                 WHERE user_aliker_id = :userId),
             author as (
                 select
-                    `author` as user_a,
+                    '" . Reaction::AUTHOR . "'::reaction_status as user_a,
                     cur_r.status as cur_us,
                     fact.author_id as user_aliker_id,
                     count(1) as cnt
@@ -279,9 +275,15 @@ class ReactionRepository extends ServiceEntityRepository
                 ON result.user_aliker_id = wish.user_aliker_id
             WHERE result.rating > 0
             order by rating desc
-            ';
+            ";
+
         $stmt = $conn->prepare($sql);
+
+      //  var_dump($sql); die();
+
         $stmt->execute(['userId' => $currentUser]);
+
+      //  $test = 'qq'; var_dump($test); die();
 
         return $stmt->fetchAll();
     }
