@@ -19,15 +19,19 @@ final class Version20230218131952 extends AbstractMigration
 
     public function up(Schema $schema) : void
     {
-        // this up() migration is auto-generated, please modify it to your needs
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
+        $this->addSql("CREATE TYPE reaction_status AS ENUM ('same', 'like', 'skip', 'dislike')");
+        $this->addSql('ALTER TABLE reaction DROP COLUMN status');
+        $this->addSql('ALTER TABLE reaction ADD status reaction_status NOT NULL');
     }
 
     public function down(Schema $schema) : void
     {
-        // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE SCHEMA public');
+        $this->addSql('ALTER TABLE reaction DROP COLUMN status');
+        $this->addSql('ALTER TABLE reaction ADD status INT NOT NULL');
+        $this->addSql('DROP TYPE reaction_status');
     }
 }
