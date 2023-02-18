@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Reaction
 {
+    const AUTHOR = 'author';
     const SAME = 'same';
     const LIKE = 'like';
     const SKIP = 'skip';
@@ -33,7 +34,7 @@ class Reaction
     private $date_time;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column
      */
     private $status;
 
@@ -77,7 +78,7 @@ class Reaction
         return $this->status;
     }
 
-    public function setStatus(int $status): self
+    public function setStatus($status): self
     {
         $this->status = $status;
 
