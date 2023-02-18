@@ -77,7 +77,7 @@ class FactRepository extends ServiceEntityRepository
             ->orderBy('fact.id', 'ASC')
             ->setMaxResults(20)
             ->getQuery()
-            ->getResult()[0];
+            ->getResult();
     }
 
     /**
