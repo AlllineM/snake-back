@@ -234,6 +234,7 @@ class ReactionRepository extends ServiceEntityRepository
                 from fact
                 INNER JOIN cur_r
                     ON cur_r.fact_id = fact.id
+                WHERE fact.author_id <> 1
                 group by fact.author_id, cur_r.status
             ),
             common_r as (    
@@ -245,6 +246,7 @@ class ReactionRepository extends ServiceEntityRepository
                 INNER JOIN cur_r
                     ON reaction.fact_id = cur_r.fact_id
                 WHERE reaction.user_aliker_id <> :userId
+                    AND reaction.user_aliker_id <> 1
                 group by reaction.status, cur_r.status, reaction.user_aliker_id
                 ), 
             common as (
@@ -253,16 +255,6 @@ class ReactionRepository extends ServiceEntityRepository
                 union select * 
                 from author
             ),
-            wish as (
-                select 
-                    common.user_aliker_id, 
-                    sum(common.cnt * weight.weight) as rating
-                from common
-                left JOIN weight
-                    ON common.cur_us = weight.reaction_one
-                        and common.cur_us = weight.reaction_two
-                group by common.user_aliker_id
-                ),
             result as (
                 select 
                     common.user_aliker_id, 
@@ -275,12 +267,8 @@ class ReactionRepository extends ServiceEntityRepository
                 )
             select 
                 result.user_aliker_id, 
-                result.rating as rating,
-                wish.rating as wish,
-                CEILING((result.rating / wish.rating) * 100) as percent
+                result.rating as rating
             from result
-            INNER JOIN wish
-                ON result.user_aliker_id = wish.user_aliker_id
             WHERE result.rating > 0
             order by rating desc
             ";
