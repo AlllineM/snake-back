@@ -126,11 +126,15 @@ class ReactionRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('t')
             ->select(['IDENTITY(t.userAliker) as userAliker', 'count(t.id) as cnt', 'u.nick'])
             ->innerJoin('t.userAliker','u')
-            ->where('t.status = 1')
+            ->where('t.status = :status')
             ->andWhere('t.userAliker <> :user')
             ->andWhere('t.fact IN(:likes)')
             ->andWhere('t.fact IN(:likes)')
-            ->setParameters(['likes'=> $likes, 'user' => $userId])
+            ->setParameters([
+                'status' => Reaction::LIKE,
+                'likes'=> $likes,
+                'user' => $userId
+            ])
             ->groupBy('t.userAliker', 'u.nick')
             ->orderBy('cnt', 'DESC')
            // ->setMaxResults(5)
@@ -176,12 +180,12 @@ class ReactionRepository extends ServiceEntityRepository
                 (SELECT fact_id, status
                 FROM reaction
                 WHERE user_aliker_id = :currentUserId 
-                    AND status <> 0),
+                ),
             r_aliker AS 
                 (SELECT fact_id, status
                 FROM reaction
                 WHERE user_aliker_id = :alikerId
-                AND status <> 0)
+                )
             select 
                 fact.body, 
                 r_curr.status as current_status, 
@@ -219,7 +223,7 @@ class ReactionRepository extends ServiceEntityRepository
                 WHERE user_aliker_id = :userId),
             author as (
                 select
-                    4 as user_a,
+                    `author` as user_a,
                     cur_r.status as cur_us,
                     fact.author_id as user_aliker_id,
                     count(1) as cnt
