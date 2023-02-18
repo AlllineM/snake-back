@@ -42,6 +42,32 @@ class FactController extends AlikerController
     }
 
     /**
+     * Получить первые 20 штук, для незареганных юзеров
+     * @Route("/api/v.0/fact/get/first", methods={"GET", "OPTIONS"})
+     *
+     * @return Response|null
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     */
+    public function getFirst() : Response
+    {
+        /** @var Fact $fact */
+        $fact = $this->getDoctrine()
+            ->getRepository(Fact::class)
+            ->getFirst();
+
+        if (!$fact) return $this->successResponse(
+            ['message' => 'Странная ошибка, что-то не так с базой'],
+            404
+        );
+
+        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+        $data = $serializer->normalize($fact, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'body']]);
+
+        return $this->successResponse($data);
+    }
+
+
+    /**
      * Добавить новый факт
      * @Route("/api/v.0/fact/add", methods={"POST", "OPTIONS"})
      * @param Request $request

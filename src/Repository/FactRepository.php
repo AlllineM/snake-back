@@ -63,6 +63,23 @@ class FactRepository extends ServiceEntityRepository
             ->getResult()[0];
     }
 
+
+    /**
+     * Возвращает первые 20 фактов, для незареганных юзеров
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getFirst()
+    {
+        return $this->createQueryBuilder('fact')
+            ->select(['fact.id', 'fact.body'])
+            ->where('fact.id <= 20 ')
+            ->orderBy('fact.id', 'ASC')
+            ->setMaxResults(20)
+            ->getQuery()
+            ->getResult()[0];
+    }
+
     /**
      * Возвращает все факты определенного автора
      * @param $author
