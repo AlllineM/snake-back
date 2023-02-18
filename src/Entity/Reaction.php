@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Reaction
 {
-    const LIKE = 1;
+    const LIKE = 'like';
     const SKIP = 0;
     const SAME = 2;
     const DISLIKE = 3;
