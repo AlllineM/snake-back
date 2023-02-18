@@ -126,11 +126,15 @@ class ReactionRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('t')
             ->select(['IDENTITY(t.userAliker) as userAliker', 'count(t.id) as cnt', 'u.nick'])
             ->innerJoin('t.userAliker','u')
-            ->where('t.status = 1')
+            ->where('t.status = :status')
             ->andWhere('t.userAliker <> :user')
             ->andWhere('t.fact IN(:likes)')
             ->andWhere('t.fact IN(:likes)')
-            ->setParameters(['likes'=> $likes, 'user' => $userId])
+            ->setParameters([
+                'status' => Reaction::LIKE,
+                'likes'=> $likes,
+                'user' => $userId
+            ])
             ->groupBy('t.userAliker', 'u.nick')
             ->orderBy('cnt', 'DESC')
            // ->setMaxResults(5)
@@ -154,11 +158,13 @@ class ReactionRepository extends ServiceEntityRepository
                 inner join reaction on reaction.fact_id = fact.id
             where fact.author_id = :authorId
                 and reaction.user_aliker_id = :userId
-                and (reaction.status = ' . Reaction::LIKE . ' or reaction.status = ' . Reaction::SAME . ')
+                and (reaction.status = :status_like or reaction.status = :status_same)
             ';
 
         $stmt = $conn->prepare($sql);
         $stmt->execute([
+            'status_like' => Reaction::LIKE,
+            'status_same' => Reaction::SAME,
             'authorId' => $authorId,
             'userId' => $userId,
         ]);
@@ -168,20 +174,18 @@ class ReactionRepository extends ServiceEntityRepository
 
     public function getCommonReactions($currentUserId, $alikerId)
     {
-        $positive = '(' . Reaction::LIKE . ', ' . Reaction::SAME . ')';
+        $positive = '(:status_like, :status_same)';
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
             with r_curr AS 
                 (SELECT fact_id, status
                 FROM reaction
-                WHERE user_aliker_id = :currentUserId 
-                    AND status <> 0),
+                WHERE user_aliker_id = :currentUserId),
             r_aliker AS 
                 (SELECT fact_id, status
                 FROM reaction
-                WHERE user_aliker_id = :alikerId
-                AND status <> 0)
+                WHERE user_aliker_id = :alikerId)
             select 
                 fact.body, 
                 r_curr.status as current_status, 
@@ -189,12 +193,16 @@ class ReactionRepository extends ServiceEntityRepository
             from r_curr
             inner join r_aliker on r_curr.fact_id = r_aliker.fact_id
             inner join fact on r_curr.fact_id = fact.id
-            where (r_curr.status = ' . Reaction::DISLIKE . ' and r_aliker.status = ' . Reaction::DISLIKE . ')
+            where (r_curr.status = :status_dislike and r_aliker.status = :status_dislike)
                 or (r_curr.status in ' . $positive . ' and r_aliker.status in ' . $positive . ')
             ';
 
         $stmt = $conn->prepare($sql);
+
         $stmt->execute([
+            'status_like' => Reaction::LIKE,
+            'status_same' => Reaction::SAME,
+            'status_dislike' => Reaction::DISLIKE,
             'currentUserId' => $currentUserId,
             'alikerId' => $alikerId,
         ]);
@@ -278,12 +286,7 @@ class ReactionRepository extends ServiceEntityRepository
             ";
 
         $stmt = $conn->prepare($sql);
-
-      //  var_dump($sql); die();
-
         $stmt->execute(['userId' => $currentUser]);
-
-      //  $test = 'qq'; var_dump($test); die();
 
         return $stmt->fetchAll();
     }
