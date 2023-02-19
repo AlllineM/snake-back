@@ -17,6 +17,8 @@ class ReactionFactory
 
     public function makeReaction($user, $factId, $status)
     {
+        $status = ReactionRepository::getStatus($status);
+
         $fact = $this->factRepository
             ->findOneById($factId);
 

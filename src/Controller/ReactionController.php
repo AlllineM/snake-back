@@ -28,15 +28,13 @@ class ReactionController extends AlikerController
     public function add(Request $request, ReactionFactory $reactionFactory)
     {
         $params = json_decode($request->getContent(), true);
-        $status = ReactionRepository::getStatus($params['status']);
 
         $user = $this->getUser();
         $user->setBalance($user->getBalance() + 10);
         $user->setRating($user->getRating() + 1);
         //todo: отсюда цены тоже вытащить. Мб в отдельные методы
 
-        $reaction = $reactionFactory->makeReaction($user, $params['fact_id'], $status);
-
+        $reaction = $reactionFactory->makeReaction($user, $params['fact_id'], $params['status']);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($reaction);
         $entityManager->flush();

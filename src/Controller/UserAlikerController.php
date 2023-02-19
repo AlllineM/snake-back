@@ -57,29 +57,18 @@ class UserAlikerController extends AlikerController
             $entityManager->persist($user);
             $entityManager->flush();
 
-
-
-
             foreach ($data['firstFacts'] as $firstFactsDatum) {
                 if (empty($firstFactsDatum['status'])) {
                     continue;
                 }
-                $status = ReactionRepository::getStatus($firstFactsDatum['status']);
-
-                $fact = $entityManager->getRepository(Fact::class)
-                    ->findOneById($firstFactsDatum['id']);
-
-                $reaction = $reactionFactory->makeReaction($user, $fact, $status);
-
+                $reaction = $reactionFactory->makeReaction(
+                    $user,
+                    $firstFactsDatum['id'],
+                    $firstFactsDatum['status']
+                );
                 $entityManager->persist($reaction);
             }
             $entityManager->flush();
-
-
-
-
-
-
 
             $data = ['user' => $user->getId(), 'token' => $token];
 
