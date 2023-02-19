@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Fact;
 use App\Entity\Reaction;
 use App\Repository\ReactionRepository;
+use App\Services\ReactionFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +26,11 @@ class UserAlikerController extends AlikerController
      * @throws \Exception
      */
     //todo: Возможно, прибить кириллицу в никах. Это не тут, но тем не менее)
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function register(
+        Request $request,
+        UserPasswordEncoderInterface $passwordEncoder,
+        ReactionFactory $reactionFactory
+    ): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -64,11 +69,7 @@ class UserAlikerController extends AlikerController
                 $fact = $entityManager->getRepository(Fact::class)
                     ->findOneById($firstFactsDatum['id']);
 
-                $reaction = new Reaction();
-                $reaction->setUserAliker($user);
-                $reaction->setFact($fact);
-                $reaction->setStatus($status);
-                $reaction->setDateTime(new \DateTime());
+                $reaction = $reactionFactory->makeReaction($user, $fact, $status);
 
                 $entityManager->persist($reaction);
             }
