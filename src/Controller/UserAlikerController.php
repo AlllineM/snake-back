@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Fact;
 use App\Entity\Reaction;
+use App\Repository\ReactionRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,9 +52,33 @@ class UserAlikerController extends AlikerController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->getDoctrine()
-                ->getRepository(Reaction::class)
-                ->setFirstReactions($data['firstFacts'], $user);
+
+
+
+            foreach ($data['firstFacts'] as $firstFactsDatum) {
+                if (empty($firstFactsDatum['status'])) {
+                    continue;
+                }
+                $status = ReactionRepository::getStatus($firstFactsDatum['status']);
+
+                $fact = $entityManager->getRepository(Fact::class)
+                    ->findOneById($firstFactsDatum['id']);
+
+                $reaction = new Reaction();
+                $reaction->setUserAliker($user);
+                $reaction->setFact($fact);
+                $reaction->setStatus($status);
+                $reaction->setDateTime(new \DateTime());
+
+                $entityManager->persist($reaction);
+            }
+            $entityManager->flush();
+
+
+
+
+
+
 
             $data = ['user' => $user->getId(), 'token' => $token];
 

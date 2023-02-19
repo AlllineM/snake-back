@@ -7,6 +7,7 @@ use App\Entity\Reaction;
 use App\Entity\UserAliker;
 use App\Repository\ReactionRepository;
 use App\Repository\RequestRepository;
+use App\Services\ReactionFactory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,11 +20,12 @@ class ReactionController extends AlikerController
     /**
      * Добавить оценку факта
      * @Route("/api/v.0/reaction/add", methods={"OPTIONS", "POST"})
-     * @param Request $request
+     * @param Request         $request
+     * @param ReactionFactory $reactionFactory
+     *
      * @return Response
-     * @throws \Exception
      */
-    public function add(Request $request)
+    public function add(Request $request, ReactionFactory $reactionFactory)
     {
         $params = json_decode($request->getContent(), true);
         $status = ReactionRepository::getStatus($params['status']);
@@ -37,11 +39,7 @@ class ReactionController extends AlikerController
             ->getRepository(Fact::class)
             ->findOneById($params['fact_id']);
 
-        $reaction = new Reaction();
-        $reaction->setUserAliker($user);
-        $reaction->setFact($fact);
-        $reaction->setStatus($status);
-        $reaction->setDateTime(new \DateTime());
+        $reaction = $reactionFactory->makeReaction($user, $fact, $status);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($reaction);
