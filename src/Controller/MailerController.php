@@ -18,7 +18,7 @@ class MailerController extends AlikerController
     public function sendEmail(MailerInterface $mailer) : Response
     {
         $email = (new Email())
-            ->from('noreply@aliker.ru')
+            ->from('a-line-s@yandex.ru')
             ->to('a-line-s@yandex.ru')
             //->cc('cc@example.com')
             //->bcc('bcc@example.com')

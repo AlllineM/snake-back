@@ -8,6 +8,8 @@ use App\Form\AddFactFormType;
 use App\Form\SendMessageFormType;
 use App\Repository\MessageRepository;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -27,7 +29,7 @@ class MessageController extends AlikerController
      * @return Response
      * @throws \Exception
      */
-    public function sendMessage(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function sendMessage(Request $request, MailerInterface $mailer): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -52,6 +54,15 @@ class MessageController extends AlikerController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($message);
             $entityManager->flush();
+
+            $email = (new Email())
+                ->from('a-line-s@yandex.ru')
+                ->to('a-line-s@yandex.ru')
+                ->subject('Time for Symfony Mailer!')
+                ->text('Sending emails is fun again!')
+                ->html('<p>У вас личное сообщение от </p>');
+
+            //$mailer->send($email);
 
             return $this->successResponse(['messageId' => $message->getId()]);
         } else  {
