@@ -57,6 +57,7 @@ class UserAlikerController extends AlikerController
             $entityManager->persist($user);
             $entityManager->flush();
 
+            //todo: отрефакторить. Возможно, дтошка
             foreach ($data['firstFacts'] as $firstFactsDatum) {
                 if (empty($firstFactsDatum['status'])) {
                     continue;

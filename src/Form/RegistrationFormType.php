@@ -38,8 +38,6 @@ class RegistrationFormType extends AbstractType
                         'message' => 'Пожалуйста, введите пароль',
                     ]),
                     new Length([
-                        'min' => 6,
-                        'minMessage' => 'Пароль должен состоять хотя бы из {{ limit }} знаков',
                         'max' => 20,
                     ]),
                 ],
