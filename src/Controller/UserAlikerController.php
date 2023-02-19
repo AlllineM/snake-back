@@ -51,6 +51,10 @@ class UserAlikerController extends AlikerController
             $entityManager->persist($user);
             $entityManager->flush();
 
+            $this->getDoctrine()
+                ->getRepository(Reaction::class)
+                ->setFirstReactions($data['firstFacts'], $user);
+
             $data = ['user' => $user->getId(), 'token' => $token];
 
             return $this->successResponse($data);

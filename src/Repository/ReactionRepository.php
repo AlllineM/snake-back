@@ -278,4 +278,28 @@ class ReactionRepository extends ServiceEntityRepository
 
         return $stmt->fetchAll();
     }
+
+    public function setFirstReactions($firstFactsData, $user)
+    {
+        $entityManager = $this->getEntityManager();
+
+        foreach ($firstFactsData as $firstFactsDatum) {
+            if (empty($firstFactsDatum['status'])) {
+                continue;
+            }
+            $status = self::getStatus($firstFactsDatum['status']);
+
+            $fact = $entityManager->getRepository(Fact::class)
+                ->findOneById($firstFactsDatum['id']);
+
+            $reaction = new Reaction();
+            $reaction->setUserAliker($user);
+            $reaction->setFact($fact);
+            $reaction->setStatus($status);
+            $reaction->setDateTime(new \DateTime());
+
+            $entityManager->persist($reaction);
+        }
+        $entityManager->flush();
+    }
 }
