@@ -35,11 +35,7 @@ class ReactionController extends AlikerController
         $user->setRating($user->getRating() + 1);
         //todo: отсюда цены тоже вытащить. Мб в отдельные методы
 
-        $fact = $this->getDoctrine()
-            ->getRepository(Fact::class)
-            ->findOneById($params['fact_id']);
-
-        $reaction = $reactionFactory->makeReaction($user, $fact, $status);
+        $reaction = $reactionFactory->makeReaction($user, $params['fact_id'], $status);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($reaction);
