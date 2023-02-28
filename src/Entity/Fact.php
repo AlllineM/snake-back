@@ -11,6 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Fact
 {
+    const NEW = 'new';
+    const APPROVE = 'approve';
+    const DISAPPROVE = 'disapprove';
+    const SHADOW = 'shadow';
+    const CONTROVERSIAL = 'controversial';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

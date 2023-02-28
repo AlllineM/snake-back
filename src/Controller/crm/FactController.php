@@ -24,7 +24,7 @@ class FactController extends AlikerController
         /** @var Fact $fact */
         $facts = $this->getDoctrine()
             ->getRepository(Fact::class)
-            ->getAllByAuthor($this->getUser()->getId());
+            ->getAllNew();
 
         if (!$facts) return $this->successResponse(
             ['message' => 'Новых фактов нет'],

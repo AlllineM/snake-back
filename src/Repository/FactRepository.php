@@ -101,8 +101,8 @@ class FactRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('fact')
             ->select(['fact.id', 'fact.body'])
-          //  ->where('fact.status = :status ')
-           // ->setParameter('status', )
+            ->where('fact.status = :status ')
+            ->setParameter('status', Fact::NEW)
             ->orderBy('fact.id', 'ASC')
             ->getQuery()
             ->getResult();
