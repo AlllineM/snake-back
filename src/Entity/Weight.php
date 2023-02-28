@@ -18,12 +18,12 @@ class Weight
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     private $reaction_one;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     private $reaction_two;
 
@@ -37,24 +37,24 @@ class Weight
         return $this->id;
     }
 
-    public function getReactionOne(): ?int
+    public function getReactionOne(): ?string
     {
         return $this->reaction_one;
     }
 
-    public function setReactionOne(int $reaction_one): self
+    public function setReactionOne(string $reaction_one): self
     {
         $this->reaction_one = $reaction_one;
 
         return $this;
     }
 
-    public function getReactionTwo(): ?int
+    public function getReactionTwo(): ?string
     {
         return $this->reaction_two;
     }
 
-    public function setReactionTwo(int $reaction_two): self
+    public function setReactionTwo(string $reaction_two): self
     {
         $this->reaction_two = $reaction_two;
 
