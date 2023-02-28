@@ -15,7 +15,7 @@ class FactController extends AlikerController
 {
     /**
      * Все факты, еще не проходившие модерацию
-     * @Route("/api/v.0/crm/fact/get/new", methods={"GET", "OPTIONS"})
+     * @Route("/api/v.1/crm/fact/get/new", methods={"GET", "OPTIONS"})
      *
      * @return Response|null
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
