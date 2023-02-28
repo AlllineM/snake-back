@@ -91,6 +91,7 @@ class FactController extends AlikerController
 
             $fact->setAuthor($user);
             $fact->setDateTime(new \DateTime());
+            $fact->setStatus(Fact::NEW);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($fact);

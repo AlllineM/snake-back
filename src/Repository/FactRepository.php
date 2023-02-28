@@ -40,9 +40,11 @@ class FactRepository extends ServiceEntityRepository
             ->select('new_facts.id')
             ->where('new_facts.id NOT IN(:likes)')
             ->andWhere('new_facts.author <> :user_id')
+            ->andWhere('new_facts.status = :status_approve')
             ->setParameters([
                 'likes' => $likes,
                 'user_id' => $userId,
+                'status_approve' => Fact::APPROVE,
             ])
             ->getQuery()
             ->getArrayResult();
