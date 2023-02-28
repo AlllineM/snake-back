@@ -40,6 +40,11 @@ class Fact
      */
     private $author;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $status;
+
     public function __construct()
     {
         $this->reactions = new ArrayCollection();
@@ -113,6 +118,18 @@ class Fact
     public function setAuthor(?UserAliker $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

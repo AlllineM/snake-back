@@ -96,4 +96,15 @@ class FactRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getAllNew()
+    {
+        return $this->createQueryBuilder('fact')
+            ->select(['fact.id', 'fact.body'])
+          //  ->where('fact.status = :status ')
+           // ->setParameter('status', )
+            ->orderBy('fact.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }
