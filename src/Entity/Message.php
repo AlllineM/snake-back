@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Message
 {
-    const NEW = 0;
-    const READ = 1;
+    const NEW = 'new';
+    const READ = 'read';
 
     /**
      * @ORM\Id()
@@ -43,7 +43,7 @@ class Message
     private $body;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     private $status;
 
@@ -101,12 +101,12 @@ class Message
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function setStatus(int $status): self
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 
