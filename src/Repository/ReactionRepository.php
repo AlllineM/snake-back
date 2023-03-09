@@ -211,7 +211,7 @@ class ReactionRepository extends ServiceEntityRepository
     }
 
     /**
-     * Основной алгоритм) Ага. //todo: Разобрать в нормальный вид
+     * Основной алгоритм)
      * @param $currentUser
      * @return mixed[]
      * @throws \Doctrine\DBAL\DBALException
@@ -267,8 +267,10 @@ class ReactionRepository extends ServiceEntityRepository
                 )
             select 
                 result.user_aliker_id, 
+                user_aliker.nick,
                 result.rating as rating
             from result
+            left join user_aliker on result.user_aliker_id = user_aliker.id
             WHERE result.rating > 0
             order by rating desc
             ";
