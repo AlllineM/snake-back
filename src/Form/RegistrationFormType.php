@@ -31,6 +31,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('nick')
             ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,
                 'constraints' => [
