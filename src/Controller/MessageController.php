@@ -39,9 +39,11 @@ class MessageController extends AlikerController
 
         //todo: добавить валидацию
         if ($form->isSubmitted()) {
+            /** @var UserAliker $userFrom */
             $userFrom = $this->getDoctrine()
                 ->getRepository(UserAliker::class)
                 ->findOneById($this->getUser()->getId());
+            /** @var UserAliker $userTo */
             $userTo = $this->getDoctrine()
                 ->getRepository(UserAliker::class)
                 ->findOneById($data['userTo']);
@@ -55,14 +57,18 @@ class MessageController extends AlikerController
             $entityManager->persist($message);
             $entityManager->flush();
 
-            $email = (new Email())
-                ->from('a-line-s@yandex.ru')
-                ->to('a-line-s@yandex.ru')
-                ->subject('Time for Symfony Mailer!')
-                ->text('Sending emails is fun again!')
-                ->html('<p>У вас личное сообщение от </p>');
+            $userFromName = $userFrom->getNick() ?? 'Пользователь №' . $userFrom->getId();
+            $htmlText = '<p>У вас личное сообщение от ' . $userFromName . '</p><br>'
+                . '<a href="http://aliker.ru/messages?alikerId=' . $userFrom->getId() . '">Прочитать</a>';
 
-            //$mailer->send($email);
+            $email = (new Email())
+                ->from('a-likers@yandex.ru')
+                ->to($userTo->getEmail())
+                ->subject($userFromName . ' отправил вам личное сообщение')
+                ->text('У вас личное сообщение от ' . $userFromName)
+                ->html($htmlText);
+
+            $mailer->send($email);
 
             return $this->successResponse(['messageId' => $message->getId()]);
         } else  {
