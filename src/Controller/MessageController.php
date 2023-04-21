@@ -59,7 +59,7 @@ class MessageController extends AlikerController
 
             $userFromName = $userFrom->getNick() ?? 'Пользователь №' . $userFrom->getId();
             $htmlText = '<p>У вас личное сообщение от ' . $userFromName . '</p><br>'
-                . '<a href="http://aliker.ru/messages?alikerId=' . $userFrom->getId() . '">Прочитать</a>';
+                . '<a href="https://aliker.ru/messages?alikerId=' . $userFrom->getId() . '">Прочитать</a>';
 
             $email = (new Email())
                 ->from('a-likers@yandex.ru')
