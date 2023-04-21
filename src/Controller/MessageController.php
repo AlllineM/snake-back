@@ -68,7 +68,12 @@ class MessageController extends AlikerController
                 ->text('У вас личное сообщение от ' . $userFromName)
                 ->html($htmlText);
 
-            $mailer->send($email);
+            try {
+                $mailer->send($email);
+            } catch (\Exception $exception) {
+                var_dump($exception->getMessage());
+                die();
+            }
 
             return $this->successResponse(['messageId' => $message->getId()]);
         } else  {
