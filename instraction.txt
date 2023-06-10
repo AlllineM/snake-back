@@ -27,8 +27,7 @@ docker build -t front .
 2) В папке docker:
 
 docker-compose up -d      Если падает, тупо перезапускать. Падает из-за коннекта или
-по памяти. Вообще сыпет дофига ошибок, но если в итоге
-запускается, то это норм)
+по памяти. Вообще сыпет дофига ошибок, но если в итоге запускается, то это норм)
 
 3) Накатить компосером библиотеки:
 
@@ -44,11 +43,44 @@ scp /home/alina/projects/aliker/backups/aliker_28.03.2023.dump  root@188.225.77.
 cat aliker_28.03.2023.dump | docker exec -i postgresql psql -U aliker -d aliker
 
 5) Поставить ssl:
+Сертификат на почте. Скачать все файлы.
+Собрать файл сертификата: https://2domains.ru/support/ssl-sertificaty/kak-nastroit-ssl-sertifikat-na-nginx
+Основное:
+- В /etc/ssl/ создать aliker.ru.crt.
+- Засунуть в этот один файл последовательно содержимое из certificate.crt, inter.crt и root.crt. (сертификат, промежуточный серт и корневой серт)
+Нужны в итоге файл aliker.ru.crt и aliker.ru.key - ключ кажется тоже летит на почту.
 
+Закинуть подготовленные файлы на сервак:
+scp /home/alina/projects/aliker/config/ssl/aliker.ru.crt /home/alina/projects/aliker/config/ssl/aliker.ru.key   root@188.225.77.125:/etc/ssl
 
+6) Создать виртуальных хост и проксю для ssl:
+cd /etc/nginx/sites-available/
+nano aliker.ru
 
+конфиг:
+server {
+        listen 443 ssl;
+        server_name aliker.ru;
+        ssl_certificate /etc/ssl/aliker.ru.crt;
+        ssl_certificate_key /etc/ssl/aliker.ru.key;
 
+        root /var/www/html;
 
+        location / {
+            proxy_pass "http://localhost:8000";
+        }
+
+        location /api {
+            proxy_pass "http://localhost:7777";
+        }
+}
+
+Создать симлинк:
+cd /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/aliker.ru /etc/nginx/sites-enabled/aliker.ru
+
+7) Прописать в .env урл фронта:
+FRONT_URL=aliker.ru
 
 
 
