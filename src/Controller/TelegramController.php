@@ -26,10 +26,10 @@ class TelegramController extends AlikerController
     {
         $tmpdata = json_decode(file_get_contents("php://input"),true);
         $arrdataapi = print_r($tmpdata, true);
-        file_put_contents(__DIR__ . '/../../apidataInput.txt', "Данные от бота: $arrdataapi");
+        file_put_contents(__DIR__ . '/../../apidataInput.txt', "Данные от бота: $arrdataapi", FILE_APPEND);
 
         $tmpdata = $request->getContent();
         $arrdataapi = print_r($tmpdata, true);
-        file_put_contents(__DIR__ . '/../../apidataPlain.txt', "Данные от бота: $arrdataapi");
+        file_put_contents(__DIR__ . '/../../apidataPlain.txt', "Данные от бота: $arrdataapi", FILE_APPEND);
     }
 }
