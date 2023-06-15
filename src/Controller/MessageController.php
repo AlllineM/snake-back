@@ -56,9 +56,8 @@ class MessageController extends AlikerController
             $token = $this->getParameter('app.telegram_token');
 
             $getQuery = array(
-                "chat_id" 	=> 1424625511,
-                "text"  	=> "Новое сообщение из формы",
-                "parse_mode" => "html"
+                "chat_id" 	=> 333773228,
+                "text"  	=> "Привет)",
             );
             $ch = curl_init("https://api.telegram.org/bot". $token ."/sendMessage?" . http_build_query($getQuery));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
