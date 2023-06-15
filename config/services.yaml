@@ -5,6 +5,9 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     app.front_url: '%env(resolve:FRONT_URL)%'
+    app.mailer_user: '%env(resolve:MAILER_USER)%'
+    app.mailer_pass: '%env(resolve:MAILER_PASS)%'
+    app.mailer_host: '%env(resolve:MAILER_HOST)%'
 
 services:
     # default configuration for services in *this* file

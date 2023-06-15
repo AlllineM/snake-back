@@ -2,22 +2,17 @@
 
 namespace App\Controller;
 
-use App\Entity\Fact;
 use App\Entity\Message;
-use App\Form\AddFactFormType;
 use App\Form\SendMessageFormType;
-use App\Repository\MessageRepository;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\UserAliker;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 
 class MessageController extends AlikerController
 {
@@ -25,11 +20,10 @@ class MessageController extends AlikerController
      * Отправить сообщение
      * @Route("/api/v.0/message/send", methods={"POST", "OPTIONS"})
      * @param Request $request
-     * @param UserPasswordEncoderInterface $passwordEncoder
      * @return Response
      * @throws \Exception
      */
-    public function sendMessage(Request $request, MailerInterface $mailer): Response
+    public function sendMessage(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -61,17 +55,29 @@ class MessageController extends AlikerController
             $htmlText = '<p>У вас личное сообщение от ' . $userFromName . '</p><br>'
                 . '<a href="https://aliker.ru/messages?alikerId=' . $userFrom->getId() . '">Прочитать</a>';
 
-            $email = (new Email())
-                ->from('info@aliker.ru')
-                ->to($userTo->getEmail())
-                ->subject($userFromName . ' отправил вам личное сообщение')
-                ->text('У вас личное сообщение от ' . $userFromName)
-                ->html($htmlText);
-
+            $mail = new PHPMailer(true);
             try {
-                $mailer->send($email);
-            } catch (\Exception $exception) {
-                echo $exception->getMessage();
+               // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+                $mail->isSMTP();
+                $mail->Host       = $this->getParameter('app.mailer_host');
+                $mail->SMTPAuth   = true;
+                $mail->Username   = $this->getParameter('app.mailer_user');
+                $mail->Password   = $this->getParameter('app.mailer_pass');
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+                $mail->Port       = 465;
+
+                $mail->setFrom('info@aliker.ru', 'Алайкер');
+                $mail->addAddress($userTo->getEmail());
+
+                $mail->isHTML(true);
+                $mail->Subject = $userFromName . ' отправил вам личное сообщение';
+                $mail->Body    = $htmlText;
+                $mail->AltBody = 'У вас личное сообщение от ' . $userFromName;
+
+                $mail->send();
+              //  echo 'Message has been sent';
+            } catch (Exception $e) {
+                //echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
 
             return $this->successResponse(['messageId' => $message->getId()]);
