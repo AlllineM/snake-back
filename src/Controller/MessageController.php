@@ -74,6 +74,13 @@ class MessageController extends AlikerController
                 $mail->Body    = $htmlText;
                 $mail->AltBody = 'У вас личное сообщение от ' . $userFromName;
 
+                $mail->DKIM_domain = 'aliker.ru';
+                $mail->DKIM_private = $this->getParameter('app.mailer_path');
+              //  $mail->DKIM_selector = 'phpmailer';
+                //$mail->DKIM_passphrase = '';
+                $mail->DKIM_identity = $mail->From;
+
+
                 $mail->send();
               //  echo 'Message has been sent';
             } catch (Exception $e) {

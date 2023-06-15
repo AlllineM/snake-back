@@ -8,6 +8,7 @@ parameters:
     app.mailer_user: '%env(resolve:MAILER_USER)%'
     app.mailer_pass: '%env(resolve:MAILER_PASS)%'
     app.mailer_host: '%env(resolve:MAILER_HOST)%'
+    app.mailer_path: '%env(resolve:MAILER_PATH)%'
 
 services:
     # default configuration for services in *this* file
