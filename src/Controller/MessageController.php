@@ -51,45 +51,65 @@ class MessageController extends AlikerController
             $entityManager->persist($message);
             $entityManager->flush();
 
-            $userFromName = $userFrom->getNick() ?? 'Пользователь №' . $userFrom->getId();
-            $htmlText = '<p>У вас личное сообщение от ' . $userFromName . '</p><br>'
-                . '<a href="https://aliker.ru/messages?alikerId=' . $userFrom->getId() . '">Прочитать</a>';
+            //$this->sendMail($userTo, $userFrom);
 
-            $mail = new PHPMailer(true);
-            try {
-               // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
-                $mail->isSMTP();
-                $mail->Host       = $this->getParameter('app.mailer_host');
-                $mail->SMTPAuth   = true;
-                $mail->Username   = $this->getParameter('app.mailer_user');
-                $mail->Password   = $this->getParameter('app.mailer_pass');
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-                $mail->Port       = 465;
+            $token = $this->getParameter('app.telegram_token');
 
-                $mail->setFrom('info@aliker.ru', 'Алайкер');
-                $mail->addAddress($userTo->getEmail());
+            $getQuery = array(
+                "chat_id" 	=> 1424625511,
+                "text"  	=> "Новое сообщение из формы",
+                "parse_mode" => "html"
+            );
+            $ch = curl_init("https://api.telegram.org/bot". $token ."/sendMessage?" . http_build_query($getQuery));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            $resultQuery = curl_exec($ch);
+            curl_close($ch);
 
-                $mail->isHTML(true);
-                $mail->Subject = $userFromName . ' отправил вам личное сообщение';
-                $mail->Body    = $htmlText;
-                $mail->AltBody = 'У вас личное сообщение от ' . $userFromName;
-
-                $mail->DKIM_domain = 'aliker.ru';
-                $mail->DKIM_private = $this->getParameter('app.mailer_path');
-              //  $mail->DKIM_selector = 'phpmailer';
-                //$mail->DKIM_passphrase = '';
-                $mail->DKIM_identity = $mail->From;
-
-
-                $mail->send();
-              //  echo 'Message has been sent';
-            } catch (Exception $e) {
-                //echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-            }
+            var_dump($resultQuery); die();
 
             return $this->successResponse(['messageId' => $message->getId()]);
         } else  {
             return $this->formError();
+        }
+    }
+
+    public function sendMail($userTo, $userFrom)
+    {
+        $userFromName = $userFrom->getNick() ?? 'Пользователь №' . $userFrom->getId();
+        $htmlText = '<p>У вас личное сообщение от ' . $userFromName . '</p><br>'
+            . '<a href="https://aliker.ru/messages?alikerId=' . $userFrom->getId() . '">Прочитать</a>';
+
+        $mail = new PHPMailer(true);
+        try {
+            // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+            $mail->isSMTP();
+            $mail->Host       = $this->getParameter('app.mailer_host');
+            $mail->SMTPAuth   = true;
+            $mail->Username   = $this->getParameter('app.mailer_user');
+            $mail->Password   = $this->getParameter('app.mailer_pass');
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port       = 465;
+
+            $mail->setFrom('info@aliker.ru', 'Алайкер');
+            $mail->addAddress($userTo->getEmail());
+
+            $mail->isHTML(true);
+            $mail->Subject = $userFromName . ' отправил вам личное сообщение';
+            $mail->Body    = $htmlText;
+            $mail->AltBody = 'У вас личное сообщение от ' . $userFromName;
+
+            $mail->DKIM_domain = 'aliker.ru';
+            $mail->DKIM_private = $this->getParameter('app.mailer_path');
+            //  $mail->DKIM_selector = 'phpmailer';
+            //$mail->DKIM_passphrase = '';
+            $mail->DKIM_identity = $mail->From;
+
+
+            $mail->send();
+            //  echo 'Message has been sent';
+        } catch (Exception $e) {
+            //echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
     }
 
