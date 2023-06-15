@@ -62,7 +62,7 @@ class MessageController extends AlikerController
                 . '<a href="https://aliker.ru/messages?alikerId=' . $userFrom->getId() . '">Прочитать</a>';
 
             $email = (new Email())
-                ->from('a-likers@yandex.ru')
+                ->from('info@aliker.ru')
                 ->to($userTo->getEmail())
                 ->subject($userFromName . ' отправил вам личное сообщение')
                 ->text('У вас личное сообщение от ' . $userFromName)
@@ -71,8 +71,7 @@ class MessageController extends AlikerController
             try {
                 $mailer->send($email);
             } catch (\Exception $exception) {
-                var_dump($exception->getMessage());
-                die();
+                echo $exception->getMessage();
             }
 
             return $this->successResponse(['messageId' => $message->getId()]);

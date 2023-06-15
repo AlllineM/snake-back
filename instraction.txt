@@ -86,8 +86,9 @@ ln -s /etc/nginx/sites-available/aliker.ru /etc/nginx/sites-enabled/aliker.ru
 7) Прописать в .env урл фронта:
 FRONT_URL=aliker.ru
 
-
-
+Почта:
+Для вк если уже занят домен - прописать тхт запись и стукануть в техподдержку
+https://vk.com/wall-161101065_1417
 
 
 
