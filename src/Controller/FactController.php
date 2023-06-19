@@ -50,6 +50,8 @@ class FactController extends AlikerController
      */
     public function getFirst() : Response
     {
+        return $this->render('base.html.twig');
+
         /** @var Fact $fact */
         $fact = $this->getDoctrine()
             ->getRepository(Fact::class)
