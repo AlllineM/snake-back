@@ -81,6 +81,15 @@ class UserAlikerController extends AlikerController
     }
 
     /**
+     * Получить первые 20 штук, для незареганных юзеров
+     * @Route("/api/v.0/user/telegramlogin", methods={"GET", "OPTIONS"})
+     **/
+    public function telegramLogin() : Response
+    {
+        return $this->render('base.html.twig');
+    }
+
+    /**
      * Вход
      * @Route("/api/v.0/user/login")
      * @param Request $request

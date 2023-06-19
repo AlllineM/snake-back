@@ -38,6 +38,7 @@ security:
          - { path: ^/api/v.0/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/api/v.0/fact/get/first, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/api/v.0/telegram/handle/message, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/api/v.0/user/telegramlogin, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/api/v.0, roles: ROLE_USER }
          - { path: ^/api/v.1/crm, roles: ROLE_ADMIN }
 
