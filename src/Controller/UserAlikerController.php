@@ -127,6 +127,18 @@ class UserAlikerController extends AlikerController
     }
 
     /**
+     * Вход
+     * @Route("/api/v.0/user/telegram-login")
+     * @param Request $request
+     * @return Response
+     * @throws \Exception
+     */
+    public function loginLoginFromTelegarm(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+    }
+
+    /**
      * Получить список мэйтов
      * @Route("/api/v.0/user/get/loguot", methods={"OPTIONS", "GET"})
      */
