@@ -94,6 +94,11 @@ class UserAliker implements UserInterface
      */
     private $messagesTo;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\TelegramUser", mappedBy="userAliker", cascade={"persist", "remove"})
+     */
+    private $telegramUser;
+
 
     public function __construct()
     {
@@ -398,6 +403,24 @@ class UserAliker implements UserInterface
         if (!$this->messagesTo->contains($messageTo)) {
             $this->messagesTo[] = $messageTo;
             $messageTo->setUserFrom($this);
+        }
+
+        return $this;
+    }
+
+    public function getTelegramUser(): ?TelegramUser
+    {
+        return $this->telegramUser;
+    }
+
+    public function setTelegramUser(?TelegramUser $telegramUser): self
+    {
+        $this->telegramUser = $telegramUser;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newUserAliker = null === $telegramUser ? null : $this;
+        if ($telegramUser->getUserAliker() !== $newUserAliker) {
+            $telegramUser->setUserAliker($newUserAliker);
         }
 
         return $this;
