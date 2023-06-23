@@ -143,6 +143,7 @@ class UserAlikerController extends AlikerController
 
         $response = new RedirectResponse('https://aliker.ru/');
         $response->setContent($request->getContent());
+        $response->setStatusCode(500);
         return $response;
 
 
