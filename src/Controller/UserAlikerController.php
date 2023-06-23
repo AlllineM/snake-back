@@ -140,7 +140,7 @@ class UserAlikerController extends AlikerController
     public function telegramLogin(Request $request, TelegramService $telegramService, Logger $logger)
     {
         $data = $request->query->all();
-        $data['hash'] = '234234';
+        $hash = $data['hash'];
         $logger->emptyMessageTelegram($data);
         $response = $this->redirect('https://aliker.ru/telegram-login');
 
@@ -156,17 +156,40 @@ class UserAlikerController extends AlikerController
         $telegramUser = $this->getDoctrine()
             ->getRepository(TelegramUser::class)
             ->findOneById($data['id']);
+        $entityManager = $this->getDoctrine()->getManager();
 
         if (empty($telegramUser)) {
-            //todo: регистарция
+            $telegramUser = new TelegramUser();
+            $telegramUser->setId($data['id']);
+            $telegramUser->setUsername($data['username'] ?? '');
+            $telegramUser->setFirstName($data['first_name'] ?? '');
+            $telegramUser->setLastName($data['last_name'] ?? '');
+            $entityManager->persist($telegramUser);
+            $entityManager->flush();
+
+            $user = $this->getUser();
+            if (empty($user)) {
+                //если юзер совсем новый, создаем
+                $user = new UserAliker();
+                $user->setRating(0);
+                $user->setBalance(5000);
+                $user->setRoles(['ROLE_USER']);
+            }
+            //если юзер уже зареган и просто добавляет телегу, только меняем хэш
+            $user->setApiToken($hash);
+            $user->setTelegramUser($telegramUser);
+            $entityManager->persist($user);
+            $entityManager->flush();
         } else {
-            //todo: вход
+            //вход
+            $user = $telegramUser->getUserAliker();
+            $user->setApiToken($hash);
+            $entityManager->persist($user);
+            $entityManager->flush();
         }
 
-
-
         $response = $this->redirect('https://aliker.ru/telegram-login');
-        $response->headers->setCookie(new Cookie('tokentest', 'testestteste'));
+        $response->headers->setCookie(new Cookie('telegram_token', $hash));
 
         return $response;
     }
