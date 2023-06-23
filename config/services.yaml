@@ -32,7 +32,7 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    App\Service\TelegramService:
+    App\Services\TelegramService:
         arguments:
             $botToken: '%app.telegram_token%'
             $adminId: '%app.telegram_admin_id%'
