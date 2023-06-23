@@ -128,7 +128,7 @@ class UserAlikerController extends AlikerController
     }
 
     /**
-     * @Route("/api/v.0/user/telegram/login", methods={"OPTIONS", "POST"})
+     * @Route("/api/v.0/user/telegram/login", methods={"OPTIONS", "GET"})
      * @param Request $request
      * @param Logger $logger
      * @return void
