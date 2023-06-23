@@ -35,26 +35,37 @@ class TelegramService
      */
     public function sendMessage($chatId, $text)
     {
-        $query = [
-            'chat_id' 	=> $chatId,
-            'text'  	=> $text,
-        ];
-        $ch = curl_init('https://api.telegram.org/bot'. $this->botToken . '/sendMessage?' . http_build_query($query));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        $resultQuery = curl_exec($ch);
-        curl_close($ch);
+        try {
+            $query = [
+                'chat_id' 	=> $chatId,
+                'text'  	=> $text,
+            ];
+            $ch = curl_init('https://api.telegram2342.org/bot'. $this->botToken . '/sendMessage?' . http_build_query($query));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            $resultQuery = curl_exec($ch);
+            curl_close($ch);
 
-        $result = json_decode($resultQuery, true);
+            if (empty($resultQuery)) {
+                $this->logger->errorTelegram('Сообщение не отправлено, почему-то пустой результат курл');
+                return false;
+            }
 
-        if ($result['ok']) {
-            return true;
-        } else {
-            $errorMessage = 'Сообщение не отправлено' . "\n"
-                . 'UserID: ' . $chatId . "\n"
-                . 'Сообщение: ' . $text . "\n"
-                . $resultQuery;
-            $this->logger->errorTelegram($errorMessage);
+            $result = json_decode($resultQuery, true);
+
+            if ($result['ok']) {
+                return true;
+            } else {
+                $errorMessage = 'Сообщение не отправлено' . "\n"
+                    . 'UserID: ' . $chatId . "\n"
+                    . 'Сообщение: ' . $text . "\n"
+                    . $resultQuery;
+                $this->logger->errorTelegram($errorMessage);
+
+                return false;
+            }
+        } catch (\Exception $exception) {
+            $this->logger->errorTelegram($exception->getMessage());
 
             return false;
         }
