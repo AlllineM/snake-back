@@ -7,6 +7,7 @@ use App\Entity\Reaction;
 use App\Helpers\Logger;
 use App\Repository\ReactionRepository;
 use App\Services\ReactionFactory;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -131,12 +132,18 @@ class UserAlikerController extends AlikerController
      * @Route("/api/v.0/user/telegram/login", methods={"OPTIONS", "GET"})
      * @param Request $request
      * @param Logger $logger
-     * @return void
+     * @return Response
      */
     public function telegramLogin(Request $request, Logger $logger)
     {
         $data = json_decode($request->getContent(), true);
         $logger->emptyMessageTelegram($data);
+
+        return $this->redirectToRoute('https://aliker.ru', ['request' => $request->getContent()]);
+
+     //   $response = new RedirectResponse('http://example.com/');
+
+
 
         return $this->redirect('https://aliker.ru');
     }
