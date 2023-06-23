@@ -96,7 +96,8 @@ chmod -R 777 var/log/telegram
 Для вк если уже занят домен - прописать тхт запись и стукануть в техподдержку
 https://vk.com/wall-161101065_1417
 
-
-
+Миграции:
+docker exec -it php-fpm sh
+php bin/console doctrine:migrations:migrate
 
 
