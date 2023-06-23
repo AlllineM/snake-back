@@ -139,9 +139,11 @@ class UserAlikerController extends AlikerController
         $data = json_decode($request->getContent(), true);
         $logger->emptyMessageTelegram($data);
 
-        return $this->redirectToRoute('https://aliker.ru', ['request' => $request->getContent()]);
+      //  return $this->redirect('https://aliker.ru', ['request' => $request->getContent()]);
 
-     //   $response = new RedirectResponse('http://example.com/');
+        $response = new RedirectResponse('https://aliker.ru/');
+        $response->setContent($request->getContent());
+        return $response;
 
 
 
