@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Fact;
 use App\Entity\Reaction;
+use App\Entity\TelegramUser;
 use App\Helpers\Logger;
 use App\Repository\ReactionRepository;
 use App\Services\ReactionFactory;
+use App\Services\TelegramService;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -135,12 +137,32 @@ class UserAlikerController extends AlikerController
      * @param Logger $logger
      * @return Response
      */
-    public function telegramLogin(Request $request, Logger $logger)
+    public function telegramLogin(Request $request, TelegramService $telegramService, Logger $logger)
     {
-        $data = json_decode($request->getContent(), true);
-
         $data = $request->query->all();
         $logger->emptyMessageTelegram($data);
+        $response = $this->redirect('https://aliker.ru/telegram-login');
+
+        try {
+            $telegramService->checkTelegramAuthorization($data);
+        } catch (\Exception $exception) {
+            $logger->errorTelegram($exception->getMessage());
+            //если хэш не прошел, редиректит без куки
+            return $response;
+        }
+
+        /** @var $telegramUser TelegramUser */
+        $telegramUser = $this->getDoctrine()
+            ->getRepository(TelegramUser::class)
+            ->findOneById($data['id']);
+
+        if (empty($telegramUser)) {
+            //todo: регистарция
+        } else {
+            //todo: вход
+        }
+
+
 
         $response = $this->redirect('https://aliker.ru/telegram-login');
         $response->headers->setCookie(new Cookie('tokentest', 'testestteste'));

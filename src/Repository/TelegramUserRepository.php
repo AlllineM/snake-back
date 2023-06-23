@@ -19,32 +19,18 @@ class TelegramUserRepository extends ServiceEntityRepository
         parent::__construct($registry, TelegramUser::class);
     }
 
-    // /**
-    //  * @return TelegramUser[] Returns an array of TelegramUser objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param $id
+     * @return int|mixed|string|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneById($id)
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder('telegram_user')
+            ->andWhere('telegram_user.id = :id')
+            ->setParameter('id', $id)
+            ->orderBy('telegram_user.id', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getOneOrNullResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?TelegramUser
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
