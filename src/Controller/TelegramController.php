@@ -23,7 +23,7 @@ class TelegramController extends AlikerController
             $arrdataapi = print_r($requestData, true);
             file_put_contents(__DIR__ . '/../../apidataInput.txt', "Данные от бота: $arrdataapi", FILE_APPEND);
 
-            $text = $requestData['message']['text'] ?? null;
+            $text = $requestData['kjjhkh']['text'] ?? null;
             file_put_contents(__DIR__ . '/../../apidataInput.txt', '-----' . $text, FILE_APPEND);
 
             switch ($text) {
