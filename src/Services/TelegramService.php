@@ -40,14 +40,17 @@ class TelegramService
                 'chat_id' 	=> $chatId,
                 'text'  	=> $text,
             ];
-            $ch = curl_init('https://api.telegram2342.org/bot'. $this->botToken . '/sendMessage?' . http_build_query($query));
+            $ch = curl_init('https://api.telegram.org/bot'. $this->botToken . '/sendMessage?' . http_build_query($query));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HEADER, false);
             $resultQuery = curl_exec($ch);
             curl_close($ch);
 
             if (empty($resultQuery)) {
-                $this->logger->errorTelegram('Сообщение не отправлено, почему-то пустой результат курл');
+                $errorMessage = 'Сообщение не отправлено, пустой результат курл' . "\n"
+                    . 'UserID: ' . $chatId . "\n"
+                    . 'Сообщение: ' . $text;
+                $this->logger->errorTelegram($errorMessage);
                 return false;
             }
 
