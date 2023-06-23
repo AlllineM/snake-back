@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Fact;
 use App\Entity\Reaction;
+use App\Helpers\Logger;
 use App\Repository\ReactionRepository;
 use App\Services\ReactionFactory;
 use Symfony\Component\Routing\Annotation\Route;
@@ -81,10 +82,10 @@ class UserAlikerController extends AlikerController
     }
 
     /**
-     * Получить первые 20 штук, для незареганных юзеров
+     * Тестовая штука
      * @Route("/api/v.0/user/telegramlogin", methods={"GET", "OPTIONS"})
      **/
-    public function telegramLogin() : Response
+    public function telegramLoginTest() : Response
     {
         return $this->render('base.html.twig');
     }
@@ -127,15 +128,15 @@ class UserAlikerController extends AlikerController
     }
 
     /**
-     * Вход
-     * @Route("/api/v.0/user/telegram-login")
+     * @Route("/api/v.0/user/telegram/login")
      * @param Request $request
-     * @return Response
-     * @throws \Exception
+     * @param Logger $logger
+     * @return void
      */
-    public function loginLoginFromTelegarm(Request $request)
+    public function telegramLogin(Request $request, Logger $logger)
     {
         $data = json_decode($request->getContent(), true);
+        $logger->emptyMessageTelegram($data);
     }
 
     /**
