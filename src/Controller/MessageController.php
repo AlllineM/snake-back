@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Message;
 use App\Form\SendMessageFormType;
+use App\Services\TelegramService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +24,7 @@ class MessageController extends AlikerController
      * @return Response
      * @throws \Exception
      */
-    public function sendMessage(Request $request): Response
+    public function sendMessage(Request $request, TelegramService $telegramService): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -51,21 +52,7 @@ class MessageController extends AlikerController
             $entityManager->persist($message);
             $entityManager->flush();
 
-            //$this->sendMail($userTo, $userFrom);
-
-            $token = $this->getParameter('app.telegram_token');
-
-            $getQuery = array(
-                "chat_id" 	=> 333773228,
-                "text"  	=> "Привет)",
-            );
-            $ch = curl_init("https://api.telegram.org/bot". $token ."/sendMessage?" . http_build_query($getQuery));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HEADER, false);
-            $resultQuery = curl_exec($ch);
-            curl_close($ch);
-
-            var_dump($resultQuery); die();
+            $telegramService->sendMessageToAdmin('Привет, из локалки');
 
             return $this->successResponse(['messageId' => $message->getId()]);
         } else  {

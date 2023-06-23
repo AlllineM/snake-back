@@ -45,12 +45,15 @@ class TelegramService
         $resultQuery = curl_exec($ch);
         curl_close($ch);
 
-        if (!empty($resultQuery)) {
+        $result = json_decode($resultQuery, true);
+
+        if ($result['ok']) {
             return true;
         } else {
             $errorMessage = 'Сообщение не отправлено' . "\n"
                 . 'UserID: ' . $chatId . "\n"
-                . 'Сообщение: ' . $text;
+                . 'Сообщение: ' . $text . "\n"
+                . $resultQuery;
             $this->logger->errorTelegram($errorMessage);
 
             return false;
