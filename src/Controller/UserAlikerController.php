@@ -140,6 +140,7 @@ class UserAlikerController extends AlikerController
     public function telegramLogin(Request $request, TelegramService $telegramService, Logger $logger)
     {
         $data = $request->query->all();
+        $data['hash'] = '234234';
         $logger->emptyMessageTelegram($data);
         $response = $this->redirect('https://aliker.ru/telegram-login');
 
