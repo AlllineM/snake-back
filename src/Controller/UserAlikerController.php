@@ -138,9 +138,11 @@ class UserAlikerController extends AlikerController
     public function telegramLogin(Request $request, Logger $logger)
     {
         $data = json_decode($request->getContent(), true);
+
+        $data = $request->query->all();
         $logger->emptyMessageTelegram($data);
 
-        $response = $this->redirect('https://aliker.ru');
+        $response = $this->redirect('https://aliker.ru/telegram-login');
         $response->headers->setCookie(new Cookie('tokentest', 'testestteste'));
 
         return $response;
