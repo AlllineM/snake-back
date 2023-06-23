@@ -7,6 +7,7 @@ use App\Entity\Reaction;
 use App\Helpers\Logger;
 use App\Repository\ReactionRepository;
 use App\Services\ReactionFactory;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -140,7 +141,7 @@ class UserAlikerController extends AlikerController
         $logger->emptyMessageTelegram($data);
 
         $response = $this->redirect('https://aliker.ru');
-        $response->headers->set('auth', 'testtesttest');
+        $response->headers->setCookie(new Cookie('tokentest', 'testestteste'));
 
         return $response;
     }
