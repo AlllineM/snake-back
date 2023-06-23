@@ -5,11 +5,14 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     app.front_url: '%env(resolve:FRONT_URL)%'
+
     app.mailer_user: '%env(resolve:MAILER_USER)%'
     app.mailer_pass: '%env(resolve:MAILER_PASS)%'
     app.mailer_host: '%env(resolve:MAILER_HOST)%'
     app.mailer_path: '%env(resolve:MAILER_PATH)%'
+
     app.telegram_token: '%env(resolve:TELEGRAM_TOKEN)%'
+    app.telegram_admin_id: '%env(resolve:TELEGRAM_ADMIN_ID)%'
 
 services:
     # default configuration for services in *this* file
@@ -29,8 +32,10 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Service\TelegramService:
+        arguments:
+            $botToken: '%app.telegram_token%'
+            $adminId: '%app.telegram_admin_id%'
 
     App\EventListener\CorsListener:
         tags:

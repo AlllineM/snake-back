@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Helpers\Logger;
+use App\Services\TelegramService;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -15,7 +16,7 @@ class TelegramController extends AlikerController
      * @param Request $request
      * @throws \Exception
      */
-    public function handleMessage(Request $request, Logger $logger)
+    public function handleMessage(Request $request, Logger $logger, TelegramService $telegramService)
     {
         try {
             $requestData = json_decode(file_get_contents("php://input"),true);
@@ -28,6 +29,7 @@ class TelegramController extends AlikerController
             switch ($text) {
                 case null:
                     $logger->emptyMessageTelegram($requestData);
+                    $telegramService->sendMessageToAdmin('Почему-то пустое сообщение с вебхука. Инфа в логах на серваке');
                     break;
             }
 
