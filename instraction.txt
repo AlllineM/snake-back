@@ -86,9 +86,11 @@ ln -s /etc/nginx/sites-available/aliker.ru /etc/nginx/sites-enabled/aliker.ru
 7) Прописать в .env урл фронта:
 FRONT_URL=aliker.ru
 
-8) Создать файл логов. Иначе ошибки с тележных вебхуков могут пропасть
-nano var/log/telegram_webhook_error_log.txt
-chmod 777 var/log/telegram_webhook_error_log.txt
+8) Создать файлы тележных логов. Это прям надо
+mkdir var/log/telegram
+nano var/log/telegram/telegram_webhook_error_log.txt
+nano var/log/telegram/telegram_webhook_empty_message_log.txt
+chmod -R 777 var/log/telegram
 
 Почта:
 Для вк если уже занят домен - прописать тхт запись и стукануть в техподдержку

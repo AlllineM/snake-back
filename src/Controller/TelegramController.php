@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Helpers\Logger;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,20 +15,24 @@ class TelegramController extends AlikerController
      * @param Request $request
      * @throws \Exception
      */
-    public function handleMessage(Request $request)
+    public function handleMessage(Request $request, Logger $logger)
     {
         try {
-            $data = json_decode(file_get_contents("php://input"),true);
-            $arrdataapi = print_r($data, true);
+            $requestData = json_decode(file_get_contents("php://input"),true);
+            $arrdataapi = print_r($requestData, true);
             file_put_contents(__DIR__ . '/../../apidataInput.txt', "Данные от бота: $arrdataapi", FILE_APPEND);
 
-            $text = $data['kjhk']['text'] ?? null;
+            $text = $requestData['message']['text'] ?? null;
             file_put_contents(__DIR__ . '/../../apidataInput.txt', '-----' . $text, FILE_APPEND);
+
+            switch ($text) {
+                case null:
+                    $logger->emptyMessageTelegram($requestData);
+            }
 
             return $this->successResponse(['status' => 'ok']);
         } catch (\Exception $exception) {
-            $error = date('d-m-Y. H-i-s') . ': ' . $exception->getMessage() . "\n";
-            file_put_contents(__DIR__ . '/../../var/log/telegram_webhook_error_log.txt', $error, FILE_APPEND);
+            $logger->errorTelegram($exception->getMessage());
         }
     }
 }
