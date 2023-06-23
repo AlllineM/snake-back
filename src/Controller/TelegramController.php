@@ -17,19 +17,17 @@ use PHPMailer\PHPMailer\Exception;
 class TelegramController extends AlikerController
 {
     /**
-     * Отправить сообщение
+     * Хук, на который телега отправляет сообщения юзеров
      * @Route("/api/v.0/telegram/handle/message", methods={"POST", "GET", "OPTIONS"})
      * @param Request $request
      * @throws \Exception
      */
-    public function sendMessage(Request $request)
+    public function handleMessage(Request $request)
     {
         $tmpdata = json_decode(file_get_contents("php://input"),true);
         $arrdataapi = print_r($tmpdata, true);
         file_put_contents(__DIR__ . '/../../apidataInput.txt', "Данные от бота: $arrdataapi", FILE_APPEND);
 
-        $tmpdata = $request->getContent();
-        $arrdataapi = print_r($tmpdata, true);
-        file_put_contents(__DIR__ . '/../../apidataPlain.txt', "Данные от бота: $arrdataapi", FILE_APPEND);
+        return $this->successResponse(['status' => 'ok']);
     }
 }
