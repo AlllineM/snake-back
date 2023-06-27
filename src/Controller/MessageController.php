@@ -64,16 +64,15 @@ class MessageController extends AlikerController
                     $text
                 );
             }
-            //todo: Пока выпилила мыло)
-//            else {
-//                if (!empty($userTo->getEmail())) {
-//                    $this->sendMail($userTo, $userFrom);
-//                } else {
-//                    $errorMessage = 'Общие логи. Уведомление не отправлено, почему-то пустые телега и мыло' . "\n"
-//                        . 'messageId: ' . $message->getId();
-//                    $logger->errorTelegram($errorMessage);
-//                }
-//            }
+            else {
+                if (!empty($userTo->getEmail())) {
+                    $this->sendMail($userTo, $userFrom);
+                } else {
+                    $errorMessage = 'Общие логи. Уведомление не отправлено, почему-то пустые телега и мыло' . "\n"
+                        . 'messageId: ' . $message->getId();
+                    $logger->errorTelegram($errorMessage);
+                }
+            }
 
             return $this->successResponse(['messageId' => $message->getId()]);
         } else  {
