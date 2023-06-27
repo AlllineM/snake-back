@@ -2,23 +2,18 @@
 
 namespace App\Controller;
 
-use App\Entity\Fact;
 use App\Entity\Reaction;
 use App\Entity\TelegramUser;
 use App\Helpers\Logger;
-use App\Repository\ReactionRepository;
-use App\Security\TokenAuthenticator;
 use App\Services\ReactionFactory;
 use App\Services\TelegramService;
 use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Entity\UserAliker;
 use App\Form\RegistrationFormType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 
 class UserAlikerController extends AlikerController
@@ -254,7 +249,15 @@ class UserAlikerController extends AlikerController
         }
 
         $response = $this->redirect('https://aliker.ru/telegram-login');
-        $response->headers->setCookie(new Cookie('telegram_token', $hash));
+        $response->headers->setCookie(new Cookie(
+            'telegram_token',
+            $hash,
+            0,
+            '/',
+            'aliker.ru',
+            false,
+            false
+        ));
 
         return $response;
     }
