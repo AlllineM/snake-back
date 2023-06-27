@@ -24,7 +24,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class UserAlikerController extends AlikerController
 {
     /**
-     * Регистрация
+     * Регистрация через мыло
      * @Route("/api/v.0/user/add", methods={"OPTIONS", "POST"})
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
@@ -88,7 +88,7 @@ class UserAlikerController extends AlikerController
 
     /**
      * Тестовая штука
-     * @Route("/api/v.0/user/telegramlogin", methods={"GET", "OPTIONS"})
+     * @Route("/api/v.0/user/telegramlogintest", methods={"GET", "OPTIONS"})
      **/
     public function telegramLoginTest() : Response
     {
@@ -96,7 +96,7 @@ class UserAlikerController extends AlikerController
     }
 
     /**
-     * Вход
+     * Вход через мыло
      * @Route("/api/v.0/user/login")
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
@@ -133,17 +133,14 @@ class UserAlikerController extends AlikerController
     }
 
     /**
-     * @Route("/api/v.0/user/telegram/login", methods={"OPTIONS", "GET"})
+     * Добавляет аккаунт телеги уже зареганному юзеру
+     * @Route("/api/v.0/user/telegram/add", methods={"OPTIONS", "GET"})
      * @param Request $request
      * @param Logger $logger
      * @return Response
      */
-    public function telegramLogin(Request $request, TelegramService $telegramService, Logger $logger, TokenAuthenticator $authenticator)
+    public function telegramAdd(Request $request, TelegramService $telegramService, Logger $logger)
     {
-        $userId = $authenticator->getUser()->getId();
-        var_dump($userId); die();
-
-
         $data = $request->query->all();
         $hash = $data['hash'];
         $logger->emptyMessageTelegram($data);
@@ -181,6 +178,69 @@ class UserAlikerController extends AlikerController
                 $user->setRoles(['ROLE_USER']);
             }
             //если юзер уже зареган и просто добавляет телегу, только меняем хэш
+            $user->setApiToken($hash);
+            $user->setTelegramUser($telegramUser);
+            $entityManager->persist($user);
+            $entityManager->flush();
+        } else {
+            //вход
+            $user = $telegramUser->getUserAliker();
+            $user->setApiToken($hash);
+            $entityManager->persist($user);
+            $entityManager->flush();
+        }
+
+        $response = $this->redirect('https://aliker.ru/telegram-login');
+        $response->headers->setCookie(new Cookie('telegram_token', $hash));
+
+        return $response;
+    }
+
+
+    /**
+     * Вход/регистрация через телегу
+     * @Route("/api/v.0/user/telegram/login", methods={"OPTIONS", "GET"})
+     * @param Request $request
+     * @param Logger $logger
+     * @return Response
+     */
+    public function telegramLogin(Request $request, TelegramService $telegramService, Logger $logger)
+    {
+        //проверка, что данные с телеги норм
+        $data = $request->query->all();
+        $hash = $data['hash'];
+        $logger->emptyMessageTelegram($data);
+        $response = $this->redirect('https://aliker.ru/telegram-login');
+
+        try {
+            $telegramService->checkTelegramAuthorization($data);
+        } catch (\Exception $exception) {
+            $logger->errorTelegram($exception->getMessage());
+            //если хэш не прошел, редиректит без куки
+            return $response;
+        }
+
+        /** @var $telegramUser TelegramUser */
+        $telegramUser = $this->getDoctrine()
+            ->getRepository(TelegramUser::class)
+            ->findOneById($data['id']);
+        $entityManager = $this->getDoctrine()->getManager();
+
+        if (empty($telegramUser)) {
+            //регистрация нового тележного юзера
+            $telegramUser = new TelegramUser();
+            $telegramUser->setId($data['id']);
+            $telegramUser->setUsername($data['username'] ?? '');
+            $telegramUser->setFirstName($data['first_name'] ?? '');
+            $telegramUser->setLastName($data['last_name'] ?? '');
+            $entityManager->persist($telegramUser);
+            $entityManager->flush();
+
+            //и нового юзера вообще. Связываем с тележным
+            $user = new UserAliker();
+            $user->setRating(0);
+            $user->setBalance(5000);
+            $user->setRoles(['ROLE_USER']);
             $user->setApiToken($hash);
             $user->setTelegramUser($telegramUser);
             $entityManager->persist($user);
