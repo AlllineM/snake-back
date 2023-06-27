@@ -58,22 +58,21 @@ class MessageController extends AlikerController
             $text = '<p>У вас личное сообщение от ' . $userFromName . '</p><br>'
                 . '<a href="https://aliker.ru/messages?alikerId=' . $userFrom->getId() . '">Прочитать</a>';
 
-            if (!empty($userTo->getTelegramUser()->getId())) {
+            if (!empty($userTo->getTelegramUser())) {
                 $telegramService->sendMessage(
                     $userTo->getTelegramUser()->getId(),
                     $text
                 );
             }
-            //todo: Если нет телеги, то нет, лол)) Уведомления пока только через них
-//            else {
-//                if (!empty($userTo->getEmail())) {
-//                    $this->sendMail($userTo, $userFrom);
-//                } else {
-//                    $errorMessage = 'Общие логи. Уведомление не отправлено, почему-то пустые телега и мыло' . "\n"
-//                        . 'messageId: ' . $message->getId();
-//                    $logger->errorTelegram($errorMessage);
-//                }
-//            }
+            else {
+                if (!empty($userTo->getEmail())) {
+                    $this->sendMail($userTo, $userFrom);
+                } else {
+                    $errorMessage = 'Общие логи. Уведомление не отправлено, почему-то пустые телега и мыло' . "\n"
+                        . 'messageId: ' . $message->getId();
+                    $logger->errorTelegram($errorMessage);
+                }
+            }
 
             return $this->successResponse(['messageId' => $message->getId()]);
         } else  {
