@@ -7,6 +7,7 @@ use App\Entity\Reaction;
 use App\Entity\TelegramUser;
 use App\Helpers\Logger;
 use App\Repository\ReactionRepository;
+use App\Security\TokenAuthenticator;
 use App\Services\ReactionFactory;
 use App\Services\TelegramService;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -137,10 +138,10 @@ class UserAlikerController extends AlikerController
      * @param Logger $logger
      * @return Response
      */
-    public function telegramLogin(Request $request, TelegramService $telegramService, Logger $logger)
+    public function telegramLogin(Request $request, TelegramService $telegramService, Logger $logger, TokenAuthenticator $authenticator)
     {
-        $user = $this->getUser()->getId();
-        var_dump($user); die();
+        $userId = $authenticator->getUser()->getId();
+        var_dump($userId); die();
 
 
         $data = $request->query->all();
