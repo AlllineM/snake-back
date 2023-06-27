@@ -228,6 +228,7 @@ class UserAlikerController extends AlikerController
             $telegramUser->setUsername($data['username'] ?? '');
             $telegramUser->setFirstName($data['first_name'] ?? '');
             $telegramUser->setLastName($data['last_name'] ?? '');
+            $telegramUser->setIsPushAllowed(true);
             $entityManager->persist($telegramUser);
             $entityManager->flush();
 

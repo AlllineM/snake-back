@@ -53,18 +53,39 @@ class MessageController extends AlikerController
             $entityManager->persist($message);
             $entityManager->flush();
 
+            //Если не подключены уведомления в телеге, то мимо)
+            if (empty($userTo->getTelegramUser())) {
+                return $this->successResponse(['messageId' => $message->getId()]);
+            }
+            if (!$userTo->getTelegramUser()->getIsPushAllowed()) {
+                return $this->successResponse(['messageId' => $message->getId()]);
+            }
+
+            //Шлем уведомления не чаще, чем раз в 5 минут.
+            // Сейчас в lastOnline записываются только попытки уведомлений. Да, такое себе)
+            // Позже будет норм)
+            if (!empty($userTo->getLastOnline()) && $userTo->getLastOnline()->getTimestamp() > time() - 60 * 5) {
+                return $this->successResponse(['messageId' => $message->getId()]);
+            }
+
             //todo: это потом сделать красиво) Вынести куда-нибудь
             $userFromName = $userFrom->getNick() ?? 'Пользователь №' . $userFrom->getId();
             $text = 'У вас личное сообщение от ' . $userFromName
                 . 'Прочитать: https://aliker.ru/messages?alikerId=' . $userFrom->getId();
 
             if (!empty($userTo->getTelegramUser())) {
-                $telegramService->sendMessage(
+                $result = $telegramService->sendMessage(
                     $userTo->getTelegramUser()->getId(),
                     $text
                 );
+                if ($result) {
+                    $userTo->setLastOnline(new \DateTime());
+                    $entityManager->persist($userTo);
+                    $entityManager->flush();
+                }
             }
-//            else {
+
+//
 //                if (!empty($userTo->getEmail())) {
 //                    $this->sendMail($userTo, $userFrom);
 //                } else {
@@ -72,7 +93,7 @@ class MessageController extends AlikerController
 //                        . 'messageId: ' . $message->getId();
 //                    $logger->errorTelegram($errorMessage);
 //                }
-//            }
+//
 
             return $this->successResponse(['messageId' => $message->getId()]);
         } else  {

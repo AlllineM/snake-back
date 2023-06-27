@@ -99,6 +99,11 @@ class UserAliker implements UserInterface
      */
     private $telegramUser;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastOnline;
+
 
     public function __construct()
     {
@@ -422,6 +427,18 @@ class UserAliker implements UserInterface
         if ($telegramUser->getUserAliker() !== $newUserAliker) {
             $telegramUser->setUserAliker($newUserAliker);
         }
+
+        return $this;
+    }
+
+    public function getLastOnline(): ?\DateTimeInterface
+    {
+        return $this->lastOnline;
+    }
+
+    public function setLastOnline(?\DateTimeInterface $lastOnline): self
+    {
+        $this->lastOnline = $lastOnline;
 
         return $this;
     }

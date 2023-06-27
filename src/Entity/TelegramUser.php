@@ -35,6 +35,11 @@ class TelegramUser
      */
     private $lastName;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isPushAllowed;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,6 +96,18 @@ class TelegramUser
     public function setLastName(?string $lastName): self
     {
         $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getIsPushAllowed(): ?bool
+    {
+        return $this->isPushAllowed;
+    }
+
+    public function setIsPushAllowed(?bool $isPushAllowed): self
+    {
+        $this->isPushAllowed = $isPushAllowed;
 
         return $this;
     }
