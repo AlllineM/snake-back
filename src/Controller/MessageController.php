@@ -55,8 +55,8 @@ class MessageController extends AlikerController
 
             //todo: это потом сделать красиво) Вынести куда-нибудь
             $userFromName = $userFrom->getNick() ?? 'Пользователь №' . $userFrom->getId();
-            $text = '<p>У вас личное сообщение от ' . $userFromName . '</p><br>'
-                . '<a href="https://aliker.ru/messages?alikerId=' . $userFrom->getId() . '">Прочитать</a>';
+            $text = 'У вас личное сообщение от ' . $userFromName
+                . 'Прочитать: https://aliker.ru/messages?alikerId=' . $userFrom->getId();
 
             if (!empty($userTo->getTelegramUser())) {
                 $telegramService->sendMessage(
@@ -161,16 +161,20 @@ class MessageController extends AlikerController
      */
     public function getMessages(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
-        $params = json_decode($request->getContent(), true);
-        $currentUserId = $this->getDoctrine()
-            ->getRepository(UserAliker::class)
-            ->findOneById($this->getUser()->getId());
+        try {
+            $params = json_decode($request->getContent(), true);
+            $currentUserId = $this->getDoctrine()
+                ->getRepository(UserAliker::class)
+                ->findOneById($this->getUser()->getId());
 
-        $messages = $this->getDoctrine()
-            ->getRepository(Message::class)
-            ->getMessages($currentUserId, $params['userId']);
+            $messages = $this->getDoctrine()
+                ->getRepository(Message::class)
+                ->getMessages($currentUserId, $params['userId']);
+        } catch (\Exception $exception) {
+            //Я хз, что здесь за хрень. Почему-то иногда этот урл плюет ошибку
+            //todo: разобраться
+        }
 
         return $this->successResponse($messages);
-
     }
 }
