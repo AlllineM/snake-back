@@ -139,6 +139,10 @@ class UserAlikerController extends AlikerController
      */
     public function telegramLogin(Request $request, TelegramService $telegramService, Logger $logger)
     {
+        $user = $this->getUser()->getId();
+        var_dump($user); die();
+
+
         $data = $request->query->all();
         $hash = $data['hash'];
         $logger->emptyMessageTelegram($data);
