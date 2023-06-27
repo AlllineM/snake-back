@@ -29,8 +29,8 @@ class TelegramService
     }
 
     /**
-     * @param $chatId
-     * @param $text
+     * @param int $chatId
+     * @param string $text
      * @return bool
      */
     public function sendMessage($chatId, $text)

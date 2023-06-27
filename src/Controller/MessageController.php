@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Message;
 use App\Form\SendMessageFormType;
+use App\Helpers\Logger;
 use App\Services\TelegramService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +25,7 @@ class MessageController extends AlikerController
      * @return Response
      * @throws \Exception
      */
-    public function sendMessage(Request $request, TelegramService $telegramService): Response
+    public function sendMessage(Request $request, TelegramService $telegramService, Logger $logger): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -52,7 +53,25 @@ class MessageController extends AlikerController
             $entityManager->persist($message);
             $entityManager->flush();
 
-            $telegramService->sendMessageToAdmin('Привет, из локалки');
+            //todo: это потом сделать красиво) Вынести куда-нибудь
+            $userFromName = $userFrom->getNick() ?? 'Пользователь №' . $userFrom->getId();
+            $text = '<p>У вас личное сообщение от ' . $userFromName . '</p><br>'
+                . '<a href="https://aliker.ru/messages?alikerId=' . $userFrom->getId() . '">Прочитать</a>';
+
+            if (!empty($userTo->getTelegramUser()->getId())) {
+                $telegramService->sendMessage(
+                    $userTo->getTelegramUser()->getId(),
+                    $text
+                );
+            } else {
+                if (!empty($userTo->getEmail())) {
+                    $this->sendMail($userTo, $userFrom);
+                } else {
+                    $errorMessage = 'Общие логи. Уведомление не отправлено, почему-то пустые телега и мыло' . "\n"
+                        . 'messageId: ' . $message->getId();
+                    $logger->errorTelegram($errorMessage);
+                }
+            }
 
             return $this->successResponse(['messageId' => $message->getId()]);
         } else  {
@@ -87,13 +106,8 @@ class MessageController extends AlikerController
 
             $mail->DKIM_domain = 'aliker.ru';
             $mail->DKIM_private = $this->getParameter('app.mailer_path');
-            //  $mail->DKIM_selector = 'phpmailer';
-            //$mail->DKIM_passphrase = '';
             $mail->DKIM_identity = $mail->From;
-
-
             $mail->send();
-            //  echo 'Message has been sent';
         } catch (Exception $e) {
             //echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
