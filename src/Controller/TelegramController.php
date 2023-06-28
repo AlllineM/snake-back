@@ -28,7 +28,7 @@ class TelegramController extends AlikerController
             $text = $requestData['message']['text'] ?? null;
             file_put_contents(__DIR__ . '/../../apidataInput.txt', '-----' . $text, FILE_APPEND);
 
-            $chatId = $requestData['chat']['id'];
+            $chatId = $requestData['message']['chat']['id'];
 
             /** @var $telegramUser TelegramUser */
             $telegramUser = $this->getDoctrine()
