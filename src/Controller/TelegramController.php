@@ -23,7 +23,11 @@ class TelegramController extends AlikerController
     {
         try {
             $requestData = json_decode(file_get_contents("php://input"),true);
+            $arrdataapi = print_r($requestData, true);
+            file_put_contents(__DIR__ . '/../../apidataInput.txt', "Данные от бота: $arrdataapi", FILE_APPEND);
             $text = $requestData['message']['text'] ?? null;
+            file_put_contents(__DIR__ . '/../../apidataInput.txt', '-----' . $text, FILE_APPEND);
+
             $chatId = $requestData['chat']['id'];
 
             /** @var $telegramUser TelegramUser */
@@ -37,10 +41,6 @@ class TelegramController extends AlikerController
             }
 
             $entityManager = $this->getDoctrine()->getManager();
-
-            $arrdataapi = print_r($requestData, true);
-            file_put_contents(__DIR__ . '/../../apidataInput.txt', "Данные от бота: $arrdataapi", FILE_APPEND);
-            file_put_contents(__DIR__ . '/../../apidataInput.txt', '-----' . $text, FILE_APPEND);
 
             switch ($text) {
                 case null:
