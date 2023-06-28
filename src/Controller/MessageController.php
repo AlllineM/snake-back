@@ -53,13 +53,16 @@ class MessageController extends AlikerController
             $entityManager->persist($message);
             $entityManager->flush();
 
+            $logger->errorTelegram('1 work');
             //Если не подключены уведомления в телеге, то мимо)
             if (empty($userTo->getTelegramUser())) {
                 return $this->successResponse(['messageId' => $message->getId()]);
             }
+            $logger->errorTelegram('2 work');
             if (!$userTo->getTelegramUser()->getIsPushAllowed()) {
                 return $this->successResponse(['messageId' => $message->getId()]);
             }
+            $logger->errorTelegram('3 work');
 
             //Шлем уведомления не чаще, чем раз в 5 минут.
             // Сейчас в lastOnline записываются только попытки уведомлений. Да, такое себе)
@@ -67,23 +70,28 @@ class MessageController extends AlikerController
             if (!empty($userTo->getLastOnline()) && $userTo->getLastOnline()->getTimestamp() > time() - 60 * 5) {
                 return $this->successResponse(['messageId' => $message->getId()]);
             }
+            $logger->errorTelegram('4 work');
 
             //todo: это потом сделать красиво) Вынести куда-нибудь
             $userFromName = $userFrom->getNick() ?? 'Пользователь №' . $userFrom->getId();
             $text = 'У вас личное сообщение от ' . $userFromName
                 . 'Прочитать: https://aliker.ru/messages?alikerId=' . $userFrom->getId();
 
-            if (!empty($userTo->getTelegramUser())) {
-                $result = $telegramService->sendMessage(
-                    $userTo->getTelegramUser()->getId(),
-                    $text
-                );
-                if ($result) {
-                    $userTo->setLastOnline(new \DateTime());
-                    $entityManager->persist($userTo);
-                    $entityManager->flush();
-                }
+            $logger->errorTelegram('5 work');
+
+            $result = $telegramService->sendMessage(
+                $userTo->getTelegramUser()->getId(),
+                $text
+            );
+            $logger->errorTelegram('6 work');
+
+            if ($result) {
+                $userTo->setLastOnline(new \DateTime());
+                $entityManager->persist($userTo);
+                $entityManager->flush();
             }
+
+            $logger->errorTelegram('7 work');
 
 //
 //                if (!empty($userTo->getEmail())) {
