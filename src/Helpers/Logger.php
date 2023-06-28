@@ -29,7 +29,7 @@ class Logger
     }
     public function errorTelegram($message)
     {
-        $error = $this->date . ': ' . $message . "\n";
+        $error = $this->date . ': ' . $message . "\n\n";
         file_put_contents(
             self::COMMON_TELEGRAM_PATH . self::TELEGRAM_ERROR_FILE,
             $error,
