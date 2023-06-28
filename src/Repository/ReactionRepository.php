@@ -14,7 +14,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @method Reaction[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 
-//todo: Тут прям нужен рефакторинг, пока еще не поздно)
 class ReactionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -66,6 +65,25 @@ class ReactionRepository extends ServiceEntityRepository
             ->getArrayResult();
     }
 
+    /**
+     * Ищет реакцию
+     * @param $userId
+     * @param $factId
+     * @return float|int|mixed|string
+     */
+    public function findReaction($userId, $factId)
+    {
+        return $this->createQueryBuilder('reaction')
+            ->where('reaction.userAliker = :userId')
+            ->andWhere('reaction.fact = :factId')
+            ->setParameters([
+                'userId' => $userId,
+                'factId' => $factId,
+            ])
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findAllReactions($userId)
     {
         return $this->createQueryBuilder('r')
@@ -115,7 +133,6 @@ class ReactionRepository extends ServiceEntityRepository
 
     //todo: Посмотреть, можно ли слить это в один запрос. И имеет ли оно смысл
     //todo: Но пока так. пофиг))
-
     /**
      * Выгружает айдишники мэйтов юзера)) И количество совпадающих лайков
      * @param $likes

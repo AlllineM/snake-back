@@ -16,7 +16,6 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class ReactionController extends AlikerController
 {
-    //todo: Еще сделать, чтобы не добавлялись дубли. Мурррк! :)
     /**
      * Добавить оценку факта
      * @Route("/api/v.0/reaction/add", methods={"OPTIONS", "POST"})
@@ -28,16 +27,37 @@ class ReactionController extends AlikerController
     public function add(Request $request, ReactionFactory $reactionFactory)
     {
         $params = json_decode($request->getContent(), true);
-
+        $factId = $params['fact_id'];
+        $status = $params['status'];
         $user = $this->getUser();
-        $user->setBalance($user->getBalance() + 10);
-        $user->setRating($user->getRating() + 1);
-        //todo: отсюда цены тоже вытащить. Мб в отдельные методы
-
-        $reaction = $reactionFactory->makeReaction($user, $params['fact_id'], $params['status']);
         $entityManager = $this->getDoctrine()->getManager();
+
+        //Чтобы не было дублей todo: Мурррк! :)
+        /** @var Reaction $reaction */
+        $reaction = $this->getDoctrine()
+            ->getRepository(Reaction::class)
+            ->findReaction($user->getId(), $factId);
+
+        if (!empty($reaction)) {
+            $reaction = $reaction[0];
+            $status = ReactionRepository::getStatus($status);
+
+            $reaction->setStatus($status);
+            $entityManager->persist($reaction);
+            $entityManager->flush();
+
+            return $this->successResponse(['reactionId' => $reaction->getId()]);
+        }
+
+        $reaction = $reactionFactory->makeReaction($user, $factId, $status);
         $entityManager->persist($reaction);
         $entityManager->flush();
+
+        $user->setBalance($user->getBalance() + 10);
+        $user->setRating($user->getRating() + 1);
+        $entityManager->persist($user);
+        $entityManager->flush();
+        //todo: отсюда цены тоже вытащить. Мб в отдельные методы
 
         return $this->successResponse(['reactionId' => $reaction->getId()]);
     }
