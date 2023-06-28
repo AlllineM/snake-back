@@ -53,30 +53,18 @@ class MessageController extends AlikerController
             $entityManager->persist($message);
             $entityManager->flush();
 
+            //Если не подключены уведомления в телеге, то мимо)
+            if (empty($userTo->getTelegramUser())) {
+                return $this->successResponse(['messageId' => $message->getId()]);
+            }
+            if (!$userTo->getTelegramUser()->getIsPushAllowed()) {
+                return $this->successResponse(['messageId' => $message->getId()]);
+            }
+
             //Шлем уведомления не чаще, чем раз в 5 минут.
             // Сейчас в lastOnline записываются только попытки уведомлений. Да, такое себе)
             // Позже будет норм)
             if (!empty($userTo->getLastOnline()) && $userTo->getLastOnline()->getTimestamp() > time() - 60 * 5) {
-                return $this->successResponse(['messageId' => $message->getId()]);
-            }
-
-            //Если не подключены уведомления в телеге, то пытаемся отправить на мыло)
-            if (empty($userTo->getTelegramUser())) {
-                if (!empty($userTo->getEmail())) {
-                    $this->sendMail($userTo, $userFrom);
-
-                    $userTo->setLastOnline(new \DateTime());
-                    $entityManager->persist($userTo);
-                    $entityManager->flush();
-                } else {
-                    $errorMessage = 'Общие логи. Уведомление не отправлено, почему-то пустые телега и мыло' . "\n"
-                        . 'messageId: ' . $message->getId();
-                    $logger->errorTelegram($errorMessage);
-                }
-                return $this->successResponse(['messageId' => $message->getId()]);
-            }
-            //Если и в телеге уведомления отключены, то пропускаем
-            if (!$userTo->getTelegramUser()->getIsPushAllowed()) {
                 return $this->successResponse(['messageId' => $message->getId()]);
             }
 
@@ -89,12 +77,22 @@ class MessageController extends AlikerController
                 $userTo->getTelegramUser()->getId(),
                 $text
             );
-
             if ($result) {
                 $userTo->setLastOnline(new \DateTime());
                 $entityManager->persist($userTo);
                 $entityManager->flush();
             }
+
+
+//
+//                if (!empty($userTo->getEmail())) {
+//                    $this->sendMail($userTo, $userFrom);
+//                } else {
+//                    $errorMessage = 'Общие логи. Уведомление не отправлено, почему-то пустые телега и мыло' . "\n"
+//                        . 'messageId: ' . $message->getId();
+//                    $logger->errorTelegram($errorMessage);
+//                }
+//
 
             return $this->successResponse(['messageId' => $message->getId()]);
         } else  {
