@@ -39,6 +39,7 @@ class TelegramService
             $query = [
                 'chat_id' 	=> $chatId,
                 'text'  	=> $text,
+                'parse_mode' => 'html'
             ];
             $ch = curl_init('https://api.telegram.org/bot'. $this->botToken . '/sendMessage?' . http_build_query($query));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

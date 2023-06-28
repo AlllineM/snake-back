@@ -87,6 +87,12 @@ class UserAlikerController extends AlikerController
      **/
     public function telegramLoginTest() : Response
     {
+        $query = [
+            'chat_id' 	=> '234324',
+            'text'  	=> 'lsijdflsjdf',
+        ];
+        $result = http_build_query($query);
+        var_dump($result); die();
         return $this->render('base.html.twig');
     }
 

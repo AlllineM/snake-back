@@ -70,19 +70,19 @@ class MessageController extends AlikerController
 
             //todo: это потом сделать красиво) Вынести куда-нибудь
             $userFromName = $userFrom->getNick() ?? 'Пользователь №' . $userFrom->getId();
-            $text = 'У вас личное сообщение от ' . $userFromName
-                . 'Прочитать: https://aliker.ru/messages?alikerId=' . $userFrom->getId();
+            $htmlText = '<p>У вас личное сообщение от ' . $userFromName . '</p><br>'
+                . '<a href="https://aliker.ru/messages?alikerId=' . $userFrom->getId() . '">Прочитать</a>';
 
             $result = $telegramService->sendMessage(
                 $userTo->getTelegramUser()->getId(),
-                $text
+                $htmlText
             );
+
             if ($result) {
                 $userTo->setLastOnline(new \DateTime());
                 $entityManager->persist($userTo);
                 $entityManager->flush();
             }
-
 
 //
 //                if (!empty($userTo->getEmail())) {
