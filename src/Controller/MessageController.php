@@ -70,7 +70,7 @@ class MessageController extends AlikerController
 
             //todo: это потом сделать красиво) Вынести куда-нибудь
             $userFromName = $userFrom->getNick() ?? 'Пользователь №' . $userFrom->getId();
-            $htmlText = '<p>У вас личное сообщение от ' . $userFromName . '</p><br>'
+            $htmlText = '<span>У вас личное сообщение от ' . $userFromName . '</span><br>'
                 . '<a href="https://aliker.ru/messages?alikerId=' . $userFrom->getId() . '">Прочитать</a>';
 
             $result = $telegramService->sendMessage(
