@@ -30,6 +30,13 @@ class TelegramController extends AlikerController
 
             $chatId = $requestData['message']['chat']['id'];
 
+            if ($text == '/report') {
+                $text = 'напиши свой текст после команды. Пример: "/report как посмотреть мэтчи?"' . "\n"
+                    . ' вернуться ' . self::BASE_URL;
+                $telegramService->sendMessage($chatId, $text);
+                return $this->successResponse(['status' => 'ok']);
+            }
+
             /** @var $telegramUser TelegramUser */
             $telegramUser = $this->getDoctrine()
                 ->getRepository(TelegramUser::class)
