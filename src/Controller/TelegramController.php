@@ -30,12 +30,25 @@ class TelegramController extends AlikerController
 
             $chatId = $requestData['message']['chat']['id'];
 
-            if ($text == '/report') {
-                $text = 'напиши свой текст после команды. Пример: "/report как посмотреть мэтчи?"' . "\n"
-                    . ' вернуться ' . self::BASE_URL;
-                $telegramService->sendMessage($chatId, $text);
+            //Если обращение в техподдержку
+            if (substr($text, 0, strlen('/report')) === '/report') {
+                if ($text == '/report') {
+                    $answer = 'Напиши свой текст после команды. Пример: "/report как посмотреть мэтчи?"' . "\n"
+                        . 'Вернуться ' . self::BASE_URL;
+                    $telegramService->sendMessage($chatId, $answer);
+                } else {
+                    $answer = 'Обращение принято' . "\n"
+                        . 'Вернуться ' . self::BASE_URL;
+                    $telegramService->sendMessage($chatId, $answer);
+
+                    $textForAdmin = 'Внезапно обращение в техподдержку. '
+                        . 'userId - ' . $chatId
+                        . $text;
+                    $telegramService->sendMessageToAdmin($textForAdmin);
+                }
                 return $this->successResponse(['status' => 'ok']);
             }
+
 
             /** @var $telegramUser TelegramUser */
             $telegramUser = $this->getDoctrine()
@@ -72,10 +85,10 @@ class TelegramController extends AlikerController
                     $telegramUser->setIsPushAllowed(false);
                     $entityManager->persist($telegramUser);
                     $entityManager->flush();
-                    $text = 'Уведомления отключены. ' . "\n"
+                    $answer = 'Уведомления отключены. ' . "\n"
                         . 'Внимание: уведомления пока работают только через этого бота' . "\n"
                         . 'Вернуться: ' . self::BASE_URL;
-                    $telegramService->sendMessage($telegramUser->getId(), $text);
+                    $telegramService->sendMessage($telegramUser->getId(), $answer);
                     break;
             }
 
