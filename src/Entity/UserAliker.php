@@ -104,6 +104,11 @@ class UserAliker implements UserInterface
      */
     private $lastOnline;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UtmUser", mappedBy="userAliker")
+     */
+    private $utmUsers;
+
 
     public function __construct()
     {
@@ -113,6 +118,7 @@ class UserAliker implements UserInterface
         $this->incomingRequests = new ArrayCollection();
         $this->messagesFrom = new ArrayCollection();
         $this->messagesTo = new ArrayCollection();
+        $this->utmUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -439,6 +445,37 @@ class UserAliker implements UserInterface
     public function setLastOnline(?\DateTimeInterface $lastOnline): self
     {
         $this->lastOnline = $lastOnline;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UtmUser[]
+     */
+    public function getUtmUsers(): Collection
+    {
+        return $this->utmUsers;
+    }
+
+    public function addUtmUser(UtmUser $utmUser): self
+    {
+        if (!$this->utmUsers->contains($utmUser)) {
+            $this->utmUsers[] = $utmUser;
+            $utmUser->setUserAliker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUtmUser(UtmUser $utmUser): self
+    {
+        if ($this->utmUsers->contains($utmUser)) {
+            $this->utmUsers->removeElement($utmUser);
+            // set the owning side to null (unless already changed)
+            if ($utmUser->getUserAliker() === $this) {
+                $utmUser->setUserAliker(null);
+            }
+        }
 
         return $this;
     }
