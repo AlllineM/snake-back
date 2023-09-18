@@ -29,10 +29,10 @@ class LogController extends AlikerController
         $data = json_decode($request->getContent(), true);
 
         $log = new Log();
-        if (!empty($data['temporaryId'])) {
+        if (!empty($data['temporaryUserId'])) {
             $utmUser = $this->getDoctrine()
                 ->getRepository(UtmUser::class)
-                ->findByTemporaryId($data['temporaryId']);
+                ->findByTemporaryId($data['temporaryUserId']);
             if (!empty($utmUser)) {
                 $log->setUtmUser($utmUser);
             }
