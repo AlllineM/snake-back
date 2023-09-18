@@ -109,6 +109,11 @@ class UserAliker implements UserInterface
      */
     private $utmUsers;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Log", mappedBy="UserAliker")
+     */
+    private $logs;
+
 
     public function __construct()
     {
@@ -119,6 +124,7 @@ class UserAliker implements UserInterface
         $this->messagesFrom = new ArrayCollection();
         $this->messagesTo = new ArrayCollection();
         $this->utmUsers = new ArrayCollection();
+        $this->logs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -474,6 +480,37 @@ class UserAliker implements UserInterface
             // set the owning side to null (unless already changed)
             if ($utmUser->getUserAliker() === $this) {
                 $utmUser->setUserAliker(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Log[]
+     */
+    public function getLogs(): Collection
+    {
+        return $this->logs;
+    }
+
+    public function addLog(Log $log): self
+    {
+        if (!$this->logs->contains($log)) {
+            $this->logs[] = $log;
+            $log->setUserAliker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLog(Log $log): self
+    {
+        if ($this->logs->contains($log)) {
+            $this->logs->removeElement($log);
+            // set the owning side to null (unless already changed)
+            if ($log->getUserAliker() === $this) {
+                $log->setUserAliker(null);
             }
         }
 
