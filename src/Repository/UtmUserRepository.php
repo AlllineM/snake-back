@@ -19,32 +19,18 @@ class UtmUserRepository extends ServiceEntityRepository
         parent::__construct($registry, UtmUser::class);
     }
 
-    // /**
-    //  * @return UtmUser[] Returns an array of UtmUser objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param $temporaryId
+     * @return float|int|mixed|string|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findByTemporaryId($temporaryId)
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder('utm_user')
+            ->andWhere('utm_user.temporaryId = :temporaryId')
+            ->setParameter('temporaryId', $temporaryId)
+            ->orderBy('utm_user.id', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getOneOrNullResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?UtmUser
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

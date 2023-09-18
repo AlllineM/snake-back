@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Fact;
+use App\Entity\Log;
+use App\Entity\UtmUser;
 use App\Form\AddFactFormType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,27 +19,31 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class LogController extends AlikerController
 {
     /**
-     * Получить рандомный факт
-     * @Route("/api/v.0/log/create", methods={"GET", "OPTIONS"})
-     *
-     * @return Response|null
-     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * Создать нового незарегистрированного юзера
+     * @Route("/api/v.0/log/create", methods={"POST", "OPTIONS"})
+     * @param Request $request
+     * @return Response
      */
-    public function getRandom() : Response
+    public function create(Request $request): Response
     {
-        /** @var Fact $fact */
-        $fact = $this->getDoctrine()
-            ->getRepository(Fact::class)
-            ->findRandom($this->getUser()->getId());
+        $data = json_decode($request->getContent(), true);
 
-        if (!$fact) return $this->successResponse(
-            ['message' => 'Нет фактов без оценок'],
-            404
-        );
+        $log = new Log();
+        if (!empty($data['temporaryId'])) {
+            $utmUser = $this->getDoctrine()
+                ->getRepository(UtmUser::class)
+                ->findByTemporaryId($data['temporaryId']);
+            if (!empty($utmUser)) {
+                $log->setUtmUser($utmUser);
+            }
+        }
+        $log->setAction($data['action'] ?? null);
+        $log->setDateTime(new \DateTime());
 
-        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
-        $data = $serializer->normalize($fact, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'body']]);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($log);
+        $entityManager->flush();
 
-        return $this->successResponse($data);
+        return $this->successResponse('ok');
     }
 }
