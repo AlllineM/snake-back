@@ -20,9 +20,12 @@ class UtmUserController extends AlikerController
         $data = json_decode($request->getContent(), true);
 
         $utmUser = new UtmUser();
-        $utmUser->setTemporaryId($data['temporaryUserId']);
-        $utmUser->setUtmSource($data['utmSource']);
-        $utmUser->setUtmMedium($data['utmMedium']);
+        $utmUser->setTemporaryId($data['temporaryUserId'] ?? null);
+        $utmUser->setUtmSource($data['utmSource'] ?? null);
+        $utmUser->setUtmMedium($data['utmMedium'] ?? null);
+        $utmUser->setUtmCampaign($data['utmCampaign'] ?? null);
+        $utmUser->setUtmTerm($data['utmTerm'] ?? null);
+        $utmUser->setUtmContent($data['utmContent'] ?? null);
         $utmUser->setCreateDateTime(new \DateTime());
 
         $entityManager = $this->getDoctrine()->getManager();
