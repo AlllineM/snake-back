@@ -30,16 +30,18 @@ class UtmUserController extends AlikerController
         $data = json_decode($request->getContent(), true);
 
         $utmUser = new UtmUser();
+//        $utmUser->setId
+//
+//        $reaction->setUserAliker($user);
+//        $reaction->setFact($fact);
+//        $reaction->setStatus($status);
+//        $reaction->setDateTime(new \DateTime());
+//
+//        $entityManager = $this->getDoctrine()->getManager();
+//        $entityManager->persist($fact);
+//        $entityManager->flush();
 
-        $fact->setAuthor($user);
-        $fact->setDateTime(new \DateTime());
-        $fact->setStatus(Fact::NEW);
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($fact);
-        $entityManager->flush();
-
-        return $this->successResponse(['factId' => $user->getId()]);
+  //      return $this->successResponse(['factId' => $user->getId()]);
 
     }
 }

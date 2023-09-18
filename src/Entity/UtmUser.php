@@ -58,6 +58,11 @@ class UtmUser
      */
     private $logs;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $temporaryId;
+
     public function __construct()
     {
         $this->logs = new ArrayCollection();
@@ -179,6 +184,18 @@ class UtmUser
                 $log->setUtmUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTemporaryId(): ?string
+    {
+        return $this->temporaryId;
+    }
+
+    public function setTemporaryId(?string $temporaryId): self
+    {
+        $this->temporaryId = $temporaryId;
 
         return $this;
     }
