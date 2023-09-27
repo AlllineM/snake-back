@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Reaction;
 use App\Entity\TelegramUser;
+use App\Entity\UtmUser;
 use App\Helpers\Logger;
 use App\Services\ReactionFactory;
 use App\Services\TelegramService;
@@ -53,6 +54,15 @@ class UserAlikerController extends AlikerController
 
             $token = bin2hex(random_bytes(15));
             $user->setApiToken($token);
+
+            if (!empty($data['utmUser'])) {
+                $utmUser = $this->getDoctrine()
+                    ->getRepository(UtmUser::class)
+                    ->findByTemporaryId($data['utmUser']);
+                if (!empty($utmUser)) {
+                    $user->addUtmUser($utmUser);
+                }
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
