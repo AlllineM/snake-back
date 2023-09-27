@@ -118,7 +118,8 @@ php bin/console doctrine:migrations:migrate
     в pg_hba.conf добавить внизу строчку
     host     all            all             свой_айпишник/32         password
 
-миграции накатываются стандартно
+миграции накатываются стандартно:
+php bin/console doctrine:migrations:migrate
 
 Конфиг нжинкса:
 server {
