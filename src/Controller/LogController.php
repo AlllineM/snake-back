@@ -37,6 +37,12 @@ class LogController extends AlikerController
                 $log->setUtmUser($utmUser);
             }
         }
+
+        /** @var UserAliker $user */
+        $user = $this->getUser();
+        if (!empty($user)) {
+            $log->setUserAliker($user);
+        }
         $log->setAction($data['action'] ?? null);
         $log->setDateTime(new \DateTime());
 
