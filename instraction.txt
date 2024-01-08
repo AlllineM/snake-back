@@ -46,7 +46,7 @@ scp /home/alina/projects/aliker/backups/aliker_28.03.2023.dump  root@188.225.77.
 Накатить в докер-контейнер
 cat aliker_28.03.2023.dump | docker exec -i postgresql psql -U aliker -d aliker
 
-5) Поставить ssl:
+5.1) Поставить ssl(если готовый сертификат от 2доменс или подобного):
 Сертификат на почте. Скачать все файлы.
 Собрать файл сертификата: https://2domains.ru/support/ssl-sertificaty/kak-nastroit-ssl-sertifikat-na-nginx
 Основное:
@@ -56,6 +56,19 @@ cat aliker_28.03.2023.dump | docker exec -i postgresql psql -U aliker -d aliker
 
 Закинуть подготовленные файлы на сервак:
 scp /home/alina/projects/aliker/config/ssl/aliker.ru.crt /home/alina/projects/aliker/config/ssl/aliker.ru.key   root@188.225.77.125:/etc/ssl
+
+5.2) Поставить ssl, если самоподписанный, с помощью letsencrypt и curtbot.
+В этом случаее это надо делать после шага 6))
+- На серваке установить curtBot:
+sudo apt install certbot python3-certbot-nginx
+- В домене должна быть прописана А-запись с айпишником сервака(привязка с серваку)
+- Нжинкс нужен уже в настроенном состоянии, и логах должен быть прописан
+server_name aliker.ru;
+- Если все это есть, то после установки сертбота, генерим сертификат через плагин для нжинкса:
+sudo certbot --nginx -d aliker.ru -d www.aliker.ru
+-Он спросит, выставлять ли перенаправление. Выставлять. (сейчас нет ничего на http)
+Если все ок, он сам генерит сертификаты и прописывает их в логах нжинкса,
+    меняя ssl_certificate и ssl_certificate_key на новый путь к сертификатам
 
 6) Создать виртуальных хост и проксю для ssl:
 cd /etc/nginx/sites-available/
