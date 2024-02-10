@@ -32,8 +32,8 @@ services:
     working_dir: /app
     restart: always
     environment:
-      POSTGRES_DB: 'constructor'
-      POSTGRES_USER: 'local_user'
+      POSTGRES_DB: 'aliker'
+      POSTGRES_USER: 'aliker'
       POSTGRES_PASSWORD: 'db_pass'
     volumes:
       - ./data/dump:/app/dump

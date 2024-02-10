@@ -1,6 +1,7 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
+        server_version: '14.0'
         mapping_types:
             reaction_status: string
             fact_status: string
