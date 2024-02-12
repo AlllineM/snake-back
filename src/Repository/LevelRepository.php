@@ -19,32 +19,18 @@ class LevelRepository extends ServiceEntityRepository
         parent::__construct($registry, Level::class);
     }
 
-    // /**
-    //  * @return Level[] Returns an array of Level objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Возвращает все базовые уровни
+     *
+     * @return float|int|mixed|string
+     */
+    public function getAllBase()
     {
         return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('l.id', 'ASC')
-            ->setMaxResults(10)
+            ->select(['l.id', 'l.blocks'])
+            ->andWhere('l.user_token = :user_token')
+            ->setParameter('user_token', '3')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Level
-    {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
