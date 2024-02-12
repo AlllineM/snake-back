@@ -18,13 +18,13 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class LevelController extends AlikerController
 {
     /**
-     * Получить все факты, которые написал юзер
+     * Выгружает все базовые уровни
      * @Route("/api/v.0/level/get/all-base", methods={"GET", "OPTIONS"})
      *
      * @return Response|null
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      */
-    public function getAll() : Response
+    public function getAllBase() : Response
     {
         /** @var Level $levels */
         $levels = $this->getDoctrine()
@@ -32,6 +32,28 @@ class LevelController extends AlikerController
             ->getAllBase();
 
         if (!$levels) return $this->errorResponse('Базовых уровней почему-то нет');
+
+        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+        $data = $serializer->normalize($levels, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'blocks']]);
+
+        return $this->successResponse($data);
+    }
+
+    /**
+     * Выгружает все кастомные уровни
+     * @Route("/api/v.0/level/get/all-custom", methods={"GET", "OPTIONS"})
+     *
+     * @return Response|null
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     */
+    public function getAllCustom() : Response
+    {
+        /** @var Level $levels */
+        $levels = $this->getDoctrine()
+            ->getRepository(Level::class)
+            ->getAllCustom();
+
+        if (!$levels) return $this->errorResponse('Кастомных уровней почему-то нет');
 
         $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
         $data = $serializer->normalize($levels, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'blocks']]);

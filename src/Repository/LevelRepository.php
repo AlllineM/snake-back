@@ -33,4 +33,20 @@ class LevelRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Возвращает все кастомные уровни
+     *
+     * @return float|int|mixed|string
+     */
+    public function getAllCustom()
+    {
+        return $this->createQueryBuilder('l')
+            ->select(['l.id', 'l.blocks'])
+            ->andWhere('l.user_token <> :user_token')
+            ->setParameter('user_token', '3')
+            ->orderBy('l.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }
