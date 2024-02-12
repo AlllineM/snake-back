@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20211023141521 extends AbstractMigration
+final class Version20240212162436 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -19,20 +19,17 @@ final class Version20211023141521 extends AbstractMigration
 
     public function up(Schema $schema) : void
     {
-        // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE SEQUENCE reaction_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE fact_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE level_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE TABLE level (id INT NOT NULL, user_token VARCHAR(255) DEFAULT NULL, blocks JSON NOT NULL, PRIMARY KEY(id))');
     }
 
     public function down(Schema $schema) : void
     {
-        // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE SCHEMA public');
-        $this->addSql('DROP SEQUENCE reaction_id_seq CASCADE');
-        $this->addSql('DROP SEQUENCE fact_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE level_id_seq CASCADE');
+        $this->addSql('DROP TABLE level');
     }
 }
