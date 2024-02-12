@@ -125,6 +125,20 @@ php bin/console doctrine:migrations:migrate
 компосер инсталл
 
 установить постргю
+(
+    Еесли надо поставить конкретную версию: sudo apt install postgresql-14 postgresql-client-14
+
+    Если не находит пакеты:
+    - поставить конкретно 14ую версию: https://techviewleo.com/how-to-install-postgresql-database-on-ubuntu/
+        sudo apt-cache search postgresql | grep postgresql
+        sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+        wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+        sudo apt -y update
+        sudo apt install postgresql-14 postgresql-client-14
+
+    - поставить любую конкретную: https://www.radishlogic.com/postgresql/how-to-install-a-specific-version-of-postgresql-in-ubuntu/
+)
+
 создать базу, юзера, дать юзеру все права на базу
 накатить дамп
 если нужен доступ к базе из вне, из шторма например, то:
