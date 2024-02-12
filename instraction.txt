@@ -63,7 +63,7 @@ scp /home/alina/projects/aliker/config/ssl/aliker.ru.crt /home/alina/projects/al
 - На серваке установить curtBot:
 sudo apt install certbot python3-certbot-nginx
 - В домене должна быть прописана А-запись с айпишником сервака(привязка с серваку)
-- Нжинкс нужен уже в настроенном состоянии, и логах должен быть прописан
+- Нжинкс нужен уже в настроенном состоянии, и конфиге должен быть прописан
 server_name aliker.ru;
 - Если все это есть, то после установки сертбота, генерим сертификат через плагин для нжинкса:
 sudo certbot --nginx -d aliker.ru -d www.aliker.ru
@@ -172,9 +172,7 @@ server {
         include fastcgi_params;
     }
 }
-База
-
-
+-------------------------------------
 
 *докер
 ПОлностью:
@@ -201,3 +199,50 @@ $ docker run hello-world
 Reboot if still got error
 
 $ reboot
+
+
+
+
+
+---------------------------------
+Конфиг нжинкса для бэкенда снейка(nano test-constructor.ru) со сгенерерированным в летсэнкрипт сертификатом.
+Летсэнкрипт добавляет в дефолтный конфиг, это уже я перенесла сюда
+server {
+        listen [::]:443 ssl ipv6only=on;
+        listen 443 ssl;
+        server_name test-constructor.ru;
+        ssl_certificate /etc/letsencrypt/live/test-constructor.ru/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/test-constructor.ru/privkey.pem;
+        include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+        root /var/www/html;
+
+        location / {
+            proxy_pass "http://localhost:8000";
+        }
+
+        location /api {
+            proxy_pass "http://localhost:7777";
+        }
+}
+server {
+    listen 7777;
+    index index.php index.html;
+    error_log "/var/log/nginx/error.log" debug;
+    access_log /var/log/nginx/access.log;
+    root /var/www/back-aliker/public;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    location ~ \.php$ {
+        try_files $uri = 404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock; # подключаем сокет php-fpm
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}
