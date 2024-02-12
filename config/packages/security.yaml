@@ -34,6 +34,9 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+         - { path: ^/api/v.0/level/get/all-base, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/api/v.0/level/get/all-custom, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/api/v.0/level/create, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/api/v.0/user/add, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/api/v.0/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/api/v.0/fact/get/first, roles: IS_AUTHENTICATED_ANONYMOUSLY }
