@@ -139,6 +139,9 @@ apt install php-pgsql
 
     - поставить любую конкретную: https://www.radishlogic.com/postgresql/how-to-install-a-specific-version-of-postgresql-in-ubuntu/
 )
+//это скорее всего не нужно, но посмотрим)
+//local   all             postgres                                md5
+
 
 создать базу, юзера, дать юзеру все права на базу
 (
