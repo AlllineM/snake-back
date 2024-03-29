@@ -50,22 +50,22 @@ class FactController extends AlikerController
      */
     public function getFirst() : Response
     {
-        return $this->successResponse(['ok' => 'ok']);
+      //  return $this->successResponse(['ok' => 'ok']);
 
-//        /** @var Fact $fact */
-//        $fact = $this->getDoctrine()
-//            ->getRepository(Fact::class)
-//            ->getFirst();
-//
-//        if (!$fact) return $this->successResponse(
-//            ['message' => 'Странная ошибка, что-то не так с базой'],
-//            404
-//        );
-//
-//        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
-//        $data = $serializer->normalize($fact, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'body']]);
-//
-//        return $this->successResponse($data);
+        /** @var Fact $fact */
+        $fact = $this->getDoctrine()
+            ->getRepository(Fact::class)
+            ->getFirst();
+
+        if (!$fact) return $this->successResponse(
+            ['message' => 'Странная ошибка, что-то не так с базой'],
+            404
+        );
+
+        $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+        $data = $serializer->normalize($fact, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'body']]);
+
+        return $this->successResponse($data);
     }
 
 

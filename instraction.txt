@@ -140,6 +140,10 @@ php bin/console doctrine:migrations:migrate
 )
 
 создать базу, юзера, дать юзеру все права на базу
+(
+    su postgres
+
+)
 накатить дамп
 если нужен доступ к базе из вне, из шторма например, то:
     в postgresql.conf  указать   listen_addresses = '*'
