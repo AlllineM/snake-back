@@ -121,7 +121,8 @@ php bin/console doctrine:migrations:migrate
 
 установить пыху, нжинкс и компосер, если нет из коробки
 установить php-fpm
-прописать енв
+apt install php-pgsql
+прописать енв (поменять postgresql на localhost d DATABASE_URL) - это хост, где база
 компосер инсталл
 
 установить постргю
