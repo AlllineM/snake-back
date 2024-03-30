@@ -146,7 +146,11 @@ apt install php-pgsql
 создать базу, юзера, дать юзеру все права на базу
 (
     su postgres
-
+    createuser testuser
+    createdb testdb
+    psql
+    alter user testuser with encrypted password 'qwerty';
+    grant all privileges on database testdb to testuser;
 )
 накатить дамп
 если нужен доступ к базе из вне, из шторма например, то:
