@@ -102,4 +102,16 @@ class LevelController extends AlikerController
 
         return $this->successResponse($data);
     }
+
+    /**
+     * Возвращает актуальную версию андроид-приложения
+     * todo: Потом вынести в другой контроллер и убрать захардкоденное
+     *
+     * @Route("/api/v.0/version/get", methods={"GET", "OPTIONS"})
+     * @return Response
+     */
+    public function getCurrentVersion() : Response
+    {
+        return $this->successResponse(['currentVersion' => '0.1']);
+    }
 }
