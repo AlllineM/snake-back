@@ -128,9 +128,10 @@ php bin/console doctrine:migrations:migrate
                            sudo apt-get update
                            sudo apt -y install php7.4
                            apt install php7.4-fpm
-apt install php-pgsql
+apt install php-pgsql или apt install php7.4-pgsql
 прописать енв (поменять postgresql на localhost в DATABASE_URL) - это хост, где база
 компосер инсталл
+обычно еще надо расширение: apt install php7.4-xml
 
 установить постргю
 (
