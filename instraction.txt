@@ -68,6 +68,7 @@ sudo apt install certbot python3-certbot-nginx
 server_name aliker.ru;
 - Если все это есть, то после установки сертбота, генерим сертификат через плагин для нжинкса:
 sudo certbot --nginx -d aliker.ru -d www.aliker.ru
+или sudo certbot --nginx -d test-constructor.ru -d www.test-constructor.ru
 -Он спросит, выставлять ли перенаправление. Выставлять. (сейчас нет ничего на http)
 Если все ок, он сам генерит сертификаты и прописывает их в логах нжинкса,
     меняя ssl_certificate и ssl_certificate_key на новый путь к сертификатам
@@ -241,14 +242,17 @@ $ reboot
 ---------------------------------
 Конфиг нжинкса для бэкенда снейка(nano test-constructor.ru) со сгенерерированным в летсэнкрипт сертификатом.
 Летсэнкрипт добавляет в дефолтный конфиг, это уже я перенесла сюда
+
 server {
         listen [::]:443 ssl ipv6only=on;
         listen 443 ssl;
         server_name test-constructor.ru;
-        ssl_certificate /etc/letsencrypt/live/test-constructor.ru/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/test-constructor.ru/privkey.pem;
-        include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+            ssl_certificate /etc/letsencrypt/live/test-constructor.ru/fullchain.pem; # managed by Certbot
+            ssl_certificate_key /etc/letsencrypt/live/test-constructor.ru/privkey.pem; # managed by Certbot
+            include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+            ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
 
         root /var/www/html;
 
@@ -261,22 +265,22 @@ server {
         }
 }
 server {
-    listen 7777;
-    index index.php index.html;
-    error_log "/var/log/nginx/error.log" debug;
-    access_log /var/log/nginx/access.log;
-    root /var/www/back-aliker/public;
+     listen 7777;
+     index index.php index.html;
+     root /var/www/snake-back/public;
 
-    location / {
-        try_files $uri $uri/ /index.php?$args;
-    }
+     location / {
+         try_files $uri /index.php?$args;
+     }
 
-    location ~ \.php$ {
-        try_files $uri = 404;
-        fastcgi_split_path_info ^(.+\.php)(/.+)$;
-        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock; # подключаем сокет php-fpm
-        fastcgi_index index.php;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include fastcgi_params;
-    }
-}
+     location ~ \.php$ {
+         try_files $uri = 404;
+         fastcgi_split_path_info ^(.+\.php)(/.+)$;
+         fastcgi_pass unix:/var/run/php/php7.4-fpm.sock; # подключаем сокет php-fpm
+         fastcgi_index index.php;
+         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+         include fastcgi_params;
+     }
+ }
+
+
