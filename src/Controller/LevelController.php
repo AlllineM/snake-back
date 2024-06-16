@@ -61,25 +61,26 @@ class LevelController extends AlikerController
 
     /**
      * Выгружает все базовые уровни
-     * @Route("/api/v.0/level/get/one", methods={"POST", "OPTIONS"})
+     * @Route("/api/v.0/level/get/one", methods={"GET", "OPTIONS"})
      *
      * @return Response|null
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      */
     public function getOne(Request $request) : Response
     {
-        $params = json_decode($request->getContent(), true);
-        $levelId = $params['level'];
+//        $params = json_decode($request->getContent(), true);
+//        $levelId = $params['level'];
+        $levelId = 1;
 
-        /** @var Level $levels */
-        $levels = $this->getDoctrine()
+        /** @var Level $level */
+        $level = $this->getDoctrine()
             ->getRepository(Level::class)
             ->getOne($levelId);
 
-        if (!$levels) return $this->errorResponse('Уровень не найден');
+        if (!$level) return $this->errorResponse('Уровень не найден');
 
         $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
-        $data = $serializer->normalize($levels, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'blocks']]);
+        $data = $serializer->normalize($level, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'blocks']]);
 
         return $this->successResponse($data);
     }
