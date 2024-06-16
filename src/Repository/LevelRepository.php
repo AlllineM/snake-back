@@ -20,6 +20,21 @@ class LevelRepository extends ServiceEntityRepository
     }
 
     /**
+     * Возвращает один по айдишнику
+     *
+     * @return float|int|mixed|string
+     */
+    public function getOne($levelId)
+    {
+        return $this->createQueryBuilder('l')
+            ->select(['l.id', 'l.blocks'])
+            ->andWhere('l.id = :id')
+            ->setParameter('id', $levelId)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Возвращает все базовые уровни
      *
      * @return float|int|mixed|string
