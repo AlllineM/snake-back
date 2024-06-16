@@ -81,7 +81,7 @@ class LevelController extends AlikerController
         $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
         $data = $serializer->normalize($level, null, [AbstractNormalizer::ATTRIBUTES => ['id', 'blocks']]);
 
-        return $this->successResponse($data);
+        return $this->successResponse($data[0]);
     }
 
     /**
