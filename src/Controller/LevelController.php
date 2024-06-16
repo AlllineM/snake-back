@@ -61,7 +61,7 @@ class LevelController extends AlikerController
 
     /**
      * Выгружает все базовые уровни
-     * @Route("/api/v.0/level/get/one", methods={"GET", "OPTIONS"})
+     * @Route("/api/v.0/level/get/one", methods={"POST", "OPTIONS"})
      *
      * @return Response|null
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
