@@ -61,16 +61,15 @@ class LevelController extends AlikerController
 
     /**
      * Выгружает все базовые уровни
-     * @Route("/api/v.0/level/get/one", methods={"GET", "OPTIONS"})
+     * @Route("/api/v.0/level/get/one", methods={"POST", "OPTIONS"})
      *
      * @return Response|null
      * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      */
     public function getOne(Request $request) : Response
     {
-//        $params = json_decode($request->getContent(), true);
-//        $levelId = $params['level'];
-        $levelId = 1;
+        $params = json_decode($request->getContent(), true);
+        $levelId = $params['level'];
 
         /** @var Level $level */
         $level = $this->getDoctrine()
