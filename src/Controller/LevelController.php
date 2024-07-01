@@ -71,7 +71,7 @@ class LevelController extends AlikerController
 
     /**
      * Создать уровень
-     * @Route("/api/v.0/level/create", methods={"POST", "OPTIONS"})
+     * @Route("/api/v.0/level/edit", methods={"POST", "OPTIONS"})
      * @param Request $request
      * @return Response
      * @throws \Exception
