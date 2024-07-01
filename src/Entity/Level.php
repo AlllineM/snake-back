@@ -26,6 +26,21 @@ class Level
      */
     private $blocks = [];
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $status;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $startSpeed;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $boostSpeed;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -51,6 +66,42 @@ class Level
     public function setBlocks(array $blocks): self
     {
         $this->blocks = $blocks;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getStartSpeed(): ?int
+    {
+        return $this->startSpeed;
+    }
+
+    public function setStartSpeed(?int $startSpeed): self
+    {
+        $this->startSpeed = $startSpeed;
+
+        return $this;
+    }
+
+    public function getBoostSpeed(): ?int
+    {
+        return $this->boostSpeed;
+    }
+
+    public function setBoostSpeed(?int $boostSpeed): self
+    {
+        $this->boostSpeed = $boostSpeed;
 
         return $this;
     }
