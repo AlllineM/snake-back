@@ -45,11 +45,11 @@ class LevelController extends AlikerController
 //        });
 
         $params = json_decode($request->getContent(), true);
-        $userToken = $params['user_token'];
-        $blocks = $params['blocks'];
-        $startSpeed = $params['start_speed'];
-        $boostSpeed = $params['boost_speed'];
-        $type = $params['type'];
+        $userToken = $params['user_token'] ?? null;
+        $blocks = $params['blocks'] ?? null;
+        $startSpeed = $params['start_speed'] ?? null;
+        $boostSpeed = $params['boost_speed'] ?? null;
+        $type = $params['type'] ?? null;
 
         $level = new Level();
         $level->setUserToken($userToken);
@@ -97,7 +97,7 @@ class LevelController extends AlikerController
 //        });
 
         $params = json_decode($request->getContent(), true);
-        $levelId = $params['level_id'];
+        $levelId = $params['level_id'] ?? null;
 
         /** @var Level $level */
         $level = $this->getDoctrine()
@@ -107,15 +107,15 @@ class LevelController extends AlikerController
             return $this->errorResponse('Уровень не найден');
         }
 
-        $userToken = $params['user_token'];
+        $userToken = $params['user_token'] ?? null;
         if ($level->getUserToken() !== $userToken) {
             return $this->errorResponse('Ошибка доступа. Юзер не является автором уровня');
         }
 
-        $startSpeed = $params['start_speed'];
-        $boostSpeed = $params['boost_speed'];
-        $blocks = $params['blocks'];
-        $type = $params['type'];
+        $startSpeed = $params['start_speed'] ?? null;
+        $boostSpeed = $params['boost_speed'] ?? null;
+        $blocks = $params['blocks'] ?? null;
+        $type = $params['type'] ?? null;
 
         $level->setBlocks($blocks);
         $level->setStartSpeed($startSpeed);
