@@ -9,6 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Level
 {
+    public const STATUS_NEW = 0;
+    public const STATUS_MODERATION = 1;
+    public const STATUS_PUBLISHED = 2;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

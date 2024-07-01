@@ -47,10 +47,82 @@ class LevelController extends AlikerController
         $params = json_decode($request->getContent(), true);
         $userToken = $params['user_token'];
         $blocks = $params['blocks'];
+        $startSpeed = $params['start_speed'];
+        $boostSpeed = $params['boost_speed'];
+        $type = $params['type'];
 
         $level = new Level();
         $level->setUserToken($userToken);
         $level->setBlocks($blocks);
+        $level->setStartSpeed($startSpeed);
+        $level->setBoostSpeed($boostSpeed);
+        if ($type == 'publish') {
+            $level->setStatus(Level::STATUS_MODERATION);
+        } else {
+            $level->setStatus(Level::STATUS_NEW);
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($level);
+        $entityManager->flush();
+
+        return $this->successResponse(['levelId' => $level->getId()]);
+    }
+
+    /**
+     * Создать уровень
+     * @Route("/api/v.0/level/create", methods={"POST", "OPTIONS"})
+     * @param Request $request
+     * @return Response
+     * @throws \Exception
+     */
+    public function edit(Request $request): Response
+    {
+        // await fetch("http://localhost:7777/api/v.0/level/create", {
+//        await fetch("https://test-constructor.ru/api/v.0/level/create", {
+//            "credentials": "omit",
+//            "headers": {
+//                "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/119.0",
+//                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+//                "Accept-Language": "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
+//                "Upgrade-Insecure-Requests": "1",
+//                "Sec-Fetch-Dest": "document",
+//                "Sec-Fetch-Mode": "navigate",
+//                "Sec-Fetch-Site": "none",
+//                "Sec-Fetch-User": "?1"
+//            },
+//            "method": "POST",
+//            "mode": "cors",
+//            "body": JSON.stringify({user_token:'3', type:'draft', blocks: [{x:1, y:2}]})
+//        });
+
+        $params = json_decode($request->getContent(), true);
+        $levelId = $params['level_id'];
+
+        /** @var Level $level */
+        $level = $this->getDoctrine()
+            ->getRepository(Level::class)
+            ->getOne($levelId);
+        if (!$level) {
+            return $this->errorResponse('Уровень не найден');
+        }
+
+        $userToken = $params['user_token'];
+        if ($level->getUserToken() !== $userToken) {
+            return $this->errorResponse('Ошибка доступа. Юзер не является автором уровня');
+        }
+
+        $startSpeed = $params['start_speed'];
+        $boostSpeed = $params['boost_speed'];
+        $blocks = $params['blocks'];
+        $type = $params['type'];
+
+        $level->setBlocks($blocks);
+        $level->setStartSpeed($startSpeed);
+        $level->setBoostSpeed($boostSpeed);
+        if ($type == 'publish') {
+            $level->setStatus(Level::STATUS_MODERATION);
+        }
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($level);
