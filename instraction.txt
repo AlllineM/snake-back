@@ -263,6 +263,9 @@ server {
         location /api {
             proxy_pass "http://localhost:7777";
         }
+        location /images/ {
+            root /var/cooler;
+        }
 }
 server {
      listen 7777;
