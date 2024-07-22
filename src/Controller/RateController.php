@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Fact;
 use App\Entity\Level;
+use App\Entity\UserRate;
 use App\Form\AddFactFormType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,13 +47,13 @@ class RateController extends AlikerController
 
 
     /**
-     * Создать уровень
-     * @Route("/api/v.0/level/create", methods={"POST", "OPTIONS"})
+     * Добавить фото
+     * @Route("/api/v.0/photo/add", methods={"POST", "OPTIONS"})
      * @param Request $request
      * @return Response
      * @throws \Exception
      */
-    public function create(Request $request): Response
+    public function addPhoto(Request $request): Response
     {
        // await fetch("http://localhost:7777/api/v.0/level/create", {
 //        await fetch("https://test-constructor.ru/api/v.0/level/create", {
@@ -72,29 +73,24 @@ class RateController extends AlikerController
 //            "body": JSON.stringify({user_token:'3', type:'draft', blocks: [{x:1, y:2}]})
 //        });
 
-        $params = json_decode($request->getContent(), true);
-        $userToken = $params['user_token'] ?? null;
-        $blocks = $params['blocks'] ?? null;
-        $startSpeed = $params['start_speed'] ?? null;
-        $boostSpeed = $params['boost_speed'] ?? null;
-        $type = $params['type'] ?? null;
+//        $params = json_decode($request->getContent(), true);
+//        $userToken = $params['user_token'] ?? null;
+//        $blocks = $params['blocks'] ?? null;
+//
+//        /** @var UserRate $user */
+//        $user = $this->getDoctrine()
+//            ->getRepository(UserRate::class)
+//            ->getOne($userToken);
+//        if (!$user) {
+//            $user = new UserRate();
+//            $user->setToken($userToken);
+//        }
+//
+//        $entityManager = $this->getDoctrine()->getManager();
+//        $entityManager->persist($user);
+//        $entityManager->flush();
 
-        $level = new Level();
-        $level->setUserToken($userToken);
-        $level->setBlocks($blocks);
-        $level->setStartSpeed($startSpeed);
-        $level->setBoostSpeed($boostSpeed);
-        if ($type == 'publish') {
-            $level->setStatus(Level::STATUS_MODERATION);
-        } else {
-            $level->setStatus(Level::STATUS_NEW);
-        }
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($level);
-        $entityManager->flush();
-
-        return $this->successResponse(['levelId' => $level->getId()]);
+        return $this->successResponse(['ok' => 'ok']);
     }
 
     /**

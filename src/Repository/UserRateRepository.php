@@ -19,6 +19,21 @@ class UserRateRepository extends ServiceEntityRepository
         parent::__construct($registry, UserRate::class);
     }
 
+    /**
+     * Возвращает юзера по токену
+     *
+     * @return float|int|mixed|string
+     */
+    public function getOne($token)
+    {
+        return $this->createQueryBuilder('u')
+            ->select(['u.id', 'u.token'])
+            ->andWhere('u.token = :token')
+            ->setParameter('token', $token)
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return UserRate[] Returns an array of UserRate objects
     //  */
