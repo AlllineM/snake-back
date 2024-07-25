@@ -6,6 +6,7 @@ use App\Entity\Fact;
 use App\Entity\Level;
 use App\Entity\UserRate;
 use App\Form\AddFactFormType;
+use App\Helpers\Logger;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -53,7 +54,7 @@ class RateController extends AlikerController
      * @return Response
      * @throws \Exception
      */
-    public function addPhoto(Request $request): Response
+    public function addPhoto(Request $request,  Logger $logger): Response
     {
        // await fetch("http://localhost:7777/api/v.0/photo/add", {
 //        await fetch("https://test-constructor.ru/api/v.0/photo/add", {
@@ -73,7 +74,9 @@ class RateController extends AlikerController
 //            "body": JSON.stringify({user_token:'3', type:'draft', blocks: [{x:1, y:2}]})
 //        });
 
-//        $params = json_decode($request->getContent(), true);
+        //$params = json_decode($request->getContent(), true);
+        $logger->errorTelegram($request->getContent());
+
 //        $userToken = $params['user_token'] ?? null;
 //        $blocks = $params['blocks'] ?? null;
 //
