@@ -74,8 +74,10 @@ class RateController extends AlikerController
 //            "body": JSON.stringify({user_token:'3', type:'draft', blocks: [{x:1, y:2}]})
 //        });
 
-        //$params = json_decode($request->getContent(), true);
-      //  $logger->errorTelegram($request->getContent());
+        $params = json_decode($request->getContent(), true);
+        var_dump($params);
+        die();
+        $logger->errorTelegram($params);
 
 //        $userToken = $params['user_token'] ?? null;
 //        $blocks = $params['blocks'] ?? null;
