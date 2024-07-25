@@ -75,7 +75,7 @@ class RateController extends AlikerController
 //        });
 
         //$params = json_decode($request->getContent(), true);
-        $logger->errorTelegram($request->getContent());
+      //  $logger->errorTelegram($request->getContent());
 
 //        $userToken = $params['user_token'] ?? null;
 //        $blocks = $params['blocks'] ?? null;
