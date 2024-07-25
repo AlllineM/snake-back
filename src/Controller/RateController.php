@@ -75,13 +75,16 @@ class RateController extends AlikerController
 //        });
 
         $requestData = $request->getContent();
-        var_dump($requestData);
-        $logger->errorTelegram($requestData);
+        //var_dump($requestData);
+        //$logger->errorTelegram($requestData);
 
         $params = json_decode($requestData, true);
         $imageString = $params['imageString'] ?? null;
-        var_dump($imageString);
-        $logger->errorTelegram($imageString);
+        //var_dump($imageString);
+        //$logger->errorTelegram($imageString);
+
+        $png = base64_decode($imageString);
+        file_put_contents(__DIR__ . '../../../image.png', $png);
 
 //        $userToken = $params['user_token'] ?? null;
 //        $blocks = $params['blocks'] ?? null;
