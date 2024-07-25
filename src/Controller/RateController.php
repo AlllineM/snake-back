@@ -55,8 +55,8 @@ class RateController extends AlikerController
      */
     public function addPhoto(Request $request): Response
     {
-       // await fetch("http://localhost:7777/api/v.0/level/create", {
-//        await fetch("https://test-constructor.ru/api/v.0/level/create", {
+       // await fetch("http://localhost:7777/api/v.0/photo/add", {
+//        await fetch("https://test-constructor.ru/api/v.0/photo/add", {
 //            "credentials": "omit",
 //            "headers": {
 //                "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/119.0",
