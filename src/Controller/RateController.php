@@ -84,8 +84,8 @@ class RateController extends AlikerController
         //$logger->errorTelegram($imageString);
 
         $jpeg = base64_decode($imageString);
-        $coolerPath = __DIR__ . '/../../../../cooler/';
-        file_put_contents($coolerPath . 'image.jpeg', $jpeg);
+        $coolerImagesPath = __DIR__ . '/../../../../cooler/images/';
+        file_put_contents($coolerImagesPath . 'image.jpeg', $jpeg);
 
 //        $userToken = $params['user_token'] ?? null;
 //        $blocks = $params['blocks'] ?? null;
