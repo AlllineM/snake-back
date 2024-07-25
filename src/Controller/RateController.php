@@ -79,9 +79,9 @@ class RateController extends AlikerController
         $logger->errorTelegram($requestData);
 
         $params = json_decode($requestData, true);
-        $bmp = $params['bmp'] ?? null;
-        var_dump($bmp);
-        $logger->errorTelegram($bmp);
+        $imageString = $params['imageString'] ?? null;
+        var_dump($imageString);
+        $logger->errorTelegram($imageString);
 
 //        $userToken = $params['user_token'] ?? null;
 //        $blocks = $params['blocks'] ?? null;
