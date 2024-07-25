@@ -6,7 +6,7 @@ namespace App\Helpers;
 
 class Logger
 {
-    const COMMON_TELEGRAM_PATH = __DIR__ . '/../../var/log/telegram/';
+    const COMMON_TELEGRAM_PATH = __DIR__ . '/../../log/telegram/';
     const TELEGRAM_ERROR_FILE = 'telegram_webhook_error_log.txt';
     const TELEGRAM_EMPTY_FILE = 'telegram_webhook_empty_message_log.txt';
 
