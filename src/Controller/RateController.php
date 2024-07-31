@@ -139,6 +139,7 @@ class RateController extends AlikerController
         unset($params['imageString']);
 
         $userToken = $params['userToken'] ?? null;
+        var_dump($userToken); die();
         $logger->errorTelegram($userToken);
 
         if (!empty($userToken)) {
