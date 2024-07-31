@@ -22,7 +22,7 @@ class UserRateRepository extends ServiceEntityRepository
     /**
      * Возвращает юзера по токену
      *
-     * @return float|int|mixed|string
+     * @return UserRate
      */
     public function getOne($token)
     {
