@@ -121,7 +121,7 @@ class RateController extends AlikerController
 //            },
 //            "method": "POST",
 //            "mode": "cors",
-//            "body": JSON.stringify({user_token:'5-fKmIrbvyQW5oMi5VJCjwgOHzRBHpkq', imageString:'jsfhkjhd'})
+//            "body": JSON.stringify({userToken:'5-fKmIrbvyQW5oMi5VJCjwgOHzRBHpkq', imageString:'jsfhkjhd'})
 //        });
 
         //$requestData = $request->getContent();
@@ -139,7 +139,6 @@ class RateController extends AlikerController
         unset($params['imageString']);
 
         $userToken = $params['userToken'] ?? null;
-        var_dump($userToken); die();
         $logger->errorTelegram($userToken);
 
         if (!empty($userToken)) {
