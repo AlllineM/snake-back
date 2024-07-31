@@ -31,7 +31,7 @@ class UserRateRepository extends ServiceEntityRepository
             ->andWhere('u.token = :token')
             ->setParameter('token', $token)
             ->getQuery()
-            ->getResult();
+            ->getResult()[0];
     }
 
     // /**
