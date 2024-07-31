@@ -27,7 +27,6 @@ class UserRateRepository extends ServiceEntityRepository
     public function getOne($token)
     {
         return $this->createQueryBuilder('u')
-            ->select(['u.id', 'u.token'])
             ->andWhere('u.token = :token')
             ->setParameter('token', $token)
             ->getQuery()
