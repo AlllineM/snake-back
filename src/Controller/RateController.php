@@ -128,13 +128,50 @@ class RateController extends AlikerController
         //$logger->errorTelegram($requestData);
 
         $params = json_decode($requestData, true);
+
+        $userToken = $params['userToken'] ?? null;
+        if (!empty($userToken)) {
+            $entityManager = $this->getDoctrine()->getManager();
+
+            /** @var $userRate UserRate */
+            $userRate = $this->getDoctrine()
+                ->getRepository(UserRate::class)
+                ->getOne($userToken);
+
+            if (empty($userRate)) {
+                $userRate = new UserRate();
+                $userRate->setToken($userToken);
+                $userRate->setRegDateTime((new \DateTime()));
+
+                //сначала сохраняем для айдишника. Потом генерим ссылку на картинку
+                $entityManager->persist($userRate);
+                $entityManager->flush();
+
+                $userRate->setPhotoLink($userRate->generateImageName());
+            } else {
+                $userRate->setPhotoLink($userRate->generateImageName());
+            }
+
+            //сохраняем ссылку
+            $entityManager->persist($userRate);
+            $entityManager->flush();
+        }
+
+        if (!empty($userToken) && !empty($userRate)) {
+            $imageName = $userRate->getPhotoLink();
+        } else {
+            //пусть пока просто сохраняет, потом посмотрим
+            $imageName = UserRate::generateAnonImageName();
+        }
+
         $imageString = $params['imageString'] ?? null;
         //var_dump($imageString);
         //$logger->errorTelegram($imageString);
 
         $jpeg = base64_decode($imageString);
         $coolerImagesPath = __DIR__ . '/../../../../cooler/images/';
-        file_put_contents($coolerImagesPath . 'image.jpeg', $jpeg);
+        file_put_contents($coolerImagesPath . $imageName . '.jpeg', $jpeg);
+
 
 //        $userToken = $params['user_token'] ?? null;
 //        $blocks = $params['blocks'] ?? null;

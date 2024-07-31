@@ -185,4 +185,23 @@ class UserRate
 
         return $this;
     }
+
+    public function generateImageName(): string
+    {
+        $randomHex = bin2hex(random_bytes(18));
+        return $this->formatId() . '_' . $randomHex;
+    }
+
+    public function formatId(): string
+    {
+        $formattedNumber = sprintf("%09d", $this->id);
+        $formattedNumber = str_split($formattedNumber, 4);
+        return implode(",", $formattedNumber);
+    }
+
+    public static function generateAnonImageName(): string
+    {
+        $randomHex = bin2hex(random_bytes(18));
+        return 'anon' . '_' . $randomHex;
+    }
 }
