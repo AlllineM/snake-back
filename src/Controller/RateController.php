@@ -144,15 +144,11 @@ class RateController extends AlikerController
                 ->getOne($userToken);
             $logger->errorTelegram("3");
 
-
-            $logger->errorTelegram($userRate->getId());
-            $logger->errorTelegram("4");
-
-
             if (empty($userRate)) {
                 $userRate = new UserRate();
                 $userRate->setToken($userToken);
                 $userRate->setRegDateTime((new \DateTime()));
+                $logger->errorTelegram("4");
 
                 //сначала сохраняем для айдишника. Потом генерим ссылку на картинку
                 $entityManager->persist($userRate);
