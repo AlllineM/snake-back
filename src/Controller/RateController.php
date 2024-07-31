@@ -130,6 +130,8 @@ class RateController extends AlikerController
         $params = json_decode($requestData, true);
 
         $userToken = $params['userToken'] ?? null;
+        $logger->errorTelegram($userToken);
+
         if (!empty($userToken)) {
             $entityManager = $this->getDoctrine()->getManager();
 
@@ -137,6 +139,8 @@ class RateController extends AlikerController
             $userRate = $this->getDoctrine()
                 ->getRepository(UserRate::class)
                 ->getOne($userToken);
+
+            $logger->errorTelegram($userRate->getId());
 
             if (empty($userRate)) {
                 $userRate = new UserRate();
@@ -147,6 +151,8 @@ class RateController extends AlikerController
                 $entityManager->persist($userRate);
                 $entityManager->flush();
             }
+
+            $logger->errorTelegram($userRate->generateImageName());
             //сохраняем ссылку
             $userRate->setPhotoLink($userRate->generateImageName());
             $entityManager->persist($userRate);
@@ -159,6 +165,8 @@ class RateController extends AlikerController
             //пусть пока просто сохраняет, потом посмотрим
             $imageName = UserRate::generateAnonImageName();
         }
+
+        $logger->errorTelegram($imageName);
 
         $imageString = $params['imageString'] ?? null;
         //var_dump($imageString);
