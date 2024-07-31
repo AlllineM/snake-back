@@ -7,6 +7,7 @@ use App\Entity\Level;
 use App\Entity\Reaction;
 use App\Entity\UserRate;
 use App\Form\AddFactFormType;
+use App\Helpers\FileHelper;
 use App\Helpers\Logger;
 use App\Repository\ReactionRepository;
 use App\Services\ReactionFactory;
@@ -103,7 +104,7 @@ class RateController extends AlikerController
      * @return Response
      * @throws \Exception
      */
-    public function addPhoto(Request $request,  Logger $logger): Response
+    public function addPhoto(Request $request,  Logger $logger, FileHelper $fileHelper): Response
     {
        // await fetch("http://localhost:7777/api/v.0/photo/add", {
 //        await fetch("https://test-constructor.ru/api/v.0/photo/add", {
@@ -123,11 +124,19 @@ class RateController extends AlikerController
 //            "body": JSON.stringify({user_token:'3', type:'draft', blocks: [{x:1, y:2}]})
 //        });
 
-        $requestData = $request->getContent();
+        //$requestData = $request->getContent();
         //var_dump($requestData);
         //$logger->errorTelegram($requestData);
 
-        $params = json_decode($requestData, true);
+        $params = json_decode($request->getContent(), true);
+
+        if (empty($params['imageString'])) {
+            return $this->successResponse(['400' => 'Не передано изображение']);
+        }
+
+        //Сохарняем картинку во временный файл и чистим память нафиг)
+        $fileHelper->saveTempFile($params['imageString']);
+        unset($params['imageString']);
 
         $userToken = $params['userToken'] ?? null;
         $logger->errorTelegram($userToken);
@@ -176,16 +185,10 @@ class RateController extends AlikerController
             $imageName = UserRate::generateAnonImageName();
         }
 
+        unset($userRate);
+
         $logger->errorTelegram($imageName);
-
-        $imageString = $params['imageString'] ?? null;
-        //var_dump($imageString);
-        //$logger->errorTelegram($imageString);
-
-        $jpeg = base64_decode($imageString);
-        $coolerImagesPath = __DIR__ . '/../../../../cooler/images/';
-        file_put_contents($coolerImagesPath . $imageName . '.jpeg', $jpeg);
-
+        $fileHelper->copyToConstantFile($imageName);
 
 //        $userToken = $params['user_token'] ?? null;
 //        $blocks = $params['blocks'] ?? null;

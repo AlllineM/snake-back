@@ -188,7 +188,6 @@ class UserRate
 
     public function generateImageName(): string
     {
-        return '123';
         $randomHex = bin2hex(random_bytes(18));
         return $this->id . '_' . $randomHex;
     }
