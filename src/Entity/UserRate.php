@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use App\Helpers\Logger;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Random\RandomException;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRateRepository")
@@ -186,10 +188,21 @@ class UserRate
         return $this;
     }
 
-    public function generateImageName(): string
+    /**
+     * @throws RandomException
+     */
+    public function generateImageName(Logger $logger): string
     {
+        $logger->errorTelegram("111");
+
         $randomHex = bin2hex(random_bytes(18));
-        return $this->id . '_' . $randomHex;
+        $logger->errorTelegram("222");
+
+        $result = $this->id . '_' . $randomHex;
+
+        $logger->errorTelegram("333");
+
+        return $result;
     }
 
     public static function generateAnonImageName(): string

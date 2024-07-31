@@ -171,10 +171,9 @@ class RateController extends AlikerController
             $logger->errorTelegram("6");
 
 
-            //$logger->errorTelegram($userRate->generateImageName());
             //сохраняем ссылку
             try {
-                $name = $userRate->generateImageName();
+                $name = $userRate->generateImageName($logger);
             } catch (\Exception $exception) {
                 $logger->errorTelegram($exception->getMessage());
             }
