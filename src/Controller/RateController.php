@@ -151,6 +151,10 @@ class RateController extends AlikerController
             $userRate = $this->getDoctrine()
                 ->getRepository(UserRate::class)
                 ->getOne($userToken);
+            var_dump($userRate);
+            die();
+
+
             $logger->errorTelegram("3");
 
             if (empty($userRate)) {
@@ -179,6 +183,7 @@ class RateController extends AlikerController
 //            }
 
             $logger->errorTelegram("7-1");
+            $logger->errorTelegram();
 
             $userRate->setPhotoLink('images2');
             $logger->errorTelegram("7-2");
