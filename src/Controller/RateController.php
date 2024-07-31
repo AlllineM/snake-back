@@ -133,14 +133,21 @@ class RateController extends AlikerController
         $logger->errorTelegram($userToken);
 
         if (!empty($userToken)) {
+            $logger->errorTelegram("1");
             $entityManager = $this->getDoctrine()->getManager();
+
+            $logger->errorTelegram("2");
 
             /** @var $userRate UserRate */
             $userRate = $this->getDoctrine()
                 ->getRepository(UserRate::class)
                 ->getOne($userToken);
+            $logger->errorTelegram("3");
+
 
             $logger->errorTelegram($userRate->getId());
+            $logger->errorTelegram("4");
+
 
             if (empty($userRate)) {
                 $userRate = new UserRate();
@@ -150,7 +157,11 @@ class RateController extends AlikerController
                 //сначала сохраняем для айдишника. Потом генерим ссылку на картинку
                 $entityManager->persist($userRate);
                 $entityManager->flush();
+                $logger->errorTelegram("5");
+
             }
+            $logger->errorTelegram("6");
+
 
             $logger->errorTelegram($userRate->generateImageName());
             //сохраняем ссылку
