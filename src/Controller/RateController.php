@@ -173,10 +173,15 @@ class RateController extends AlikerController
 
             //$logger->errorTelegram($userRate->generateImageName());
             //сохраняем ссылку
-            $userRate->setPhotoLink($userRate->generateImageName());
+            $name = $userRate->generateImageName();
+            $logger->errorTelegram("7-1");
+
+            $userRate->setPhotoLink($name);
+            $logger->errorTelegram("7-2");
+
             $entityManager->persist($userRate);
             $entityManager->flush();
-            $logger->errorTelegram("7");
+            $logger->errorTelegram("7-3");
 
         }
 
