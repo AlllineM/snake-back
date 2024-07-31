@@ -171,11 +171,13 @@ class RateController extends AlikerController
             $logger->errorTelegram("6");
 
 
-            $logger->errorTelegram($userRate->generateImageName());
+            //$logger->errorTelegram($userRate->generateImageName());
             //сохраняем ссылку
             $userRate->setPhotoLink($userRate->generateImageName());
             $entityManager->persist($userRate);
             $entityManager->flush();
+            $logger->errorTelegram("7");
+
         }
 
         if (!empty($userToken) && !empty($userRate)) {
@@ -185,10 +187,15 @@ class RateController extends AlikerController
             $imageName = UserRate::generateAnonImageName();
         }
 
+        $logger->errorTelegram("8");
+
+
         unset($userRate);
 
         $logger->errorTelegram($imageName);
         $fileHelper->copyToConstantFile($imageName);
+        $logger->errorTelegram("9");
+
 
 //        $userToken = $params['user_token'] ?? null;
 //        $blocks = $params['blocks'] ?? null;
