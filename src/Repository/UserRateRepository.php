@@ -24,7 +24,7 @@ class UserRateRepository extends ServiceEntityRepository
      *
      * @return UserRate
      */
-    public function getOne($token)
+    public function getOne($token) : UserRate
     {
         return $this->createQueryBuilder('u')
             ->select(['u.id', 'u.token'])
