@@ -151,7 +151,7 @@ class RateController extends AlikerController
             $userRate = $this->getDoctrine()
                 ->getRepository(UserRate::class)
                 ->getOne($userToken);
-            var_dump($userRate);
+            var_dump($userRate->getId());
             die();
 
 
