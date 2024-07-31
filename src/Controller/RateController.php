@@ -121,7 +121,7 @@ class RateController extends AlikerController
 //            },
 //            "method": "POST",
 //            "mode": "cors",
-//            "body": JSON.stringify({user_token:'3', type:'draft', blocks: [{x:1, y:2}]})
+//            "body": JSON.stringify({user_token:'5-fKmIrbvyQW5oMi5VJCjwgOHzRBHpkq', imageString:'jsfhkjhd'})
 //        });
 
         //$requestData = $request->getContent();
