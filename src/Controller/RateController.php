@@ -146,13 +146,9 @@ class RateController extends AlikerController
                 //сначала сохраняем для айдишника. Потом генерим ссылку на картинку
                 $entityManager->persist($userRate);
                 $entityManager->flush();
-
-                $userRate->setPhotoLink($userRate->generateImageName());
-            } else {
-                $userRate->setPhotoLink($userRate->generateImageName());
             }
-
             //сохраняем ссылку
+            $userRate->setPhotoLink($userRate->generateImageName());
             $entityManager->persist($userRate);
             $entityManager->flush();
         }

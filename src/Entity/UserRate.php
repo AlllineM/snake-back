@@ -189,7 +189,7 @@ class UserRate
     public function generateImageName(): string
     {
         $randomHex = bin2hex(random_bytes(18));
-        return $this->getId() . '_' . $randomHex;
+        return $this->id . '_' . $randomHex;
     }
 
     public static function generateAnonImageName(): string
