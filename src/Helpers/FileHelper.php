@@ -23,6 +23,6 @@ class FileHelper
 
     public function copyToConstantFile($imageName)
     {
-        copy(self::IMAGE_PATH . 'temp.jpeg', self::IMAGE_PATH . $imageName);
+        copy(self::IMAGE_PATH . 'temp.jpeg', self::IMAGE_PATH . $imageName . 'jpeg');
     }
 }
