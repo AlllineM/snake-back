@@ -69,6 +69,7 @@ server_name aliker.ru;
 - Если все это есть, то после установки сертбота, генерим сертификат через плагин для нжинкса:
 sudo certbot --nginx -d aliker.ru -d www.aliker.ru
 или sudo certbot --nginx -d test-constructor.ru -d www.test-constructor.ru
+или sudo certbot --nginx -d poschitat-vozrast.ru -d www.poschitat-vozrast.ru
 -Он спросит, выставлять ли перенаправление. Выставлять. (сейчас нет ничего на http)
 Если все ок, он сам генерит сертификаты и прописывает их в логах нжинкса,
     меняя ssl_certificate и ssl_certificate_key на новый путь к сертификатам
@@ -284,3 +285,96 @@ server {
  }
 
 
+
+Конфиг "Ссколько лет"
+server {
+        listen [::]:443 ssl;
+        listen 443 ssl;
+        server_name poschitat-vozrast.ru;
+
+        ssl_certificate /etc/letsencrypt/live/poschitat-vozrast.ru/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/poschitat-vozrast.ru/privkey.pem; # managed by Certbot
+        include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+        root /var/www/html;
+
+        location / {
+            proxy_pass "http://localhost:5555";
+        }
+}
+
+server {
+    listen 5555;
+    index index.php index.html;
+    root /var/www/howOld;
+
+    location / {
+        try_files $uri /index.php?$args;
+    }
+
+    location ~ \.php$ {
+        try_files $uri = 404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock; # подключаем сокет php-fpm
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}
+
+
+
+
+
+server {
+        listen [::]:443 ssl;
+        listen 443 ssl;
+        server_name test-constructor.ru;
+
+            ssl_certificate /etc/letsencrypt/live/test-constructor.ru/fullchain.pem; # managed by Certbot
+            ssl_certificate_key /etc/letsencrypt/live/test-constructor.ru/privkey.pem; # managed by Certbot
+            include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+            ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+        root /var/www/html;
+
+        location / {
+            proxy_pass "http://localhost:8000";
+        }
+
+        location /api {
+            proxy_pass "http://localhost:7777";
+        }
+        location /images/ {
+            root /var/cooler;
+        }
+        location /.well-known/acme-challenge/ {
+            alias /usr/local/save/;
+            default_type text/plain;
+         }
+}
+server {
+    listen 7777;
+    index index.php index.html;
+    root /var/www/snake-back/public;
+
+    location / {
+        try_files $uri /index.php?$args;
+    }
+
+    location ~ \.php$ {
+        try_files $uri = 404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock; # подключаем сокет php-fpm
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}
+
+
+
+/etc/letsencrypt/live/poschitat-vozrast.ru/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/poschitat-vozrast.ru/privkey.pem
