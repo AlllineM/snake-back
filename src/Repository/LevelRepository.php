@@ -57,7 +57,15 @@ class LevelRepository extends ServiceEntityRepository
     public function getAllCustom()
     {
         return $this->createQueryBuilder('l')
-            ->select(['l.id', 'l.blocks'])
+            ->select([
+                'l.id', 
+                'l.blocks', 
+                'l.startSpeed',
+                'l.user_name',
+                'l.rating',
+                'l.targetScore',
+                'l.user_token'
+            ])
             ->andWhere('l.user_token <> :user_token')
             ->setParameter('user_token', '3')
             ->orderBy('l.id', 'DESC')
