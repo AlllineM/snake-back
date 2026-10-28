@@ -63,8 +63,7 @@ class LevelRepository extends ServiceEntityRepository
                 'l.startSpeed',
                 'l.user_name',
                 'l.rating',
-                'l.targetScore',
-                'l.user_token'
+                'l.targetScore'
             ])
             ->andWhere('l.user_token <> :user_token')
             ->setParameter('user_token', '3')
