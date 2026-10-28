@@ -131,7 +131,7 @@ php bin/console doctrine:migrations:migrate
                            apt install php7.4-fpm
 apt install php-pgsql или apt install php7.4-pgsql
 прописать енв (поменять postgresql на localhost в DATABASE_URL) - это хост, где база
-компосер инсталл
+компосер инсталл (лучше php composer.phar install потому что иначе еботня с версиями)
 обычно еще надо расширение: apt install php7.4-xml
 
 установить постргю
@@ -163,6 +163,7 @@ apt install php-pgsql или apt install php7.4-pgsql
 )
 накатить дамп
 если нужен доступ к базе из вне, из шторма например, то:
+    (cd /etc/postgresql/14/main)
     в postgresql.conf  указать   listen_addresses = '*'
     в pg_hba.conf добавить внизу строчку
     host     all            all             свой_айпишник/32         password
