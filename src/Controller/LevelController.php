@@ -49,6 +49,9 @@ class LevelController extends AlikerController
         $blocks = $params['blocks'] ?? null;
         $startSpeed = $params['start_speed'] ?? null;
         $boostSpeed = $params['boost_speed'] ?? null;
+        $userName = $params['user_name'] ?? null;
+        $targetScore = $params['target_score'] ?? null;
+
         $type = $params['type'] ?? null;
 
         $level = new Level();
@@ -115,6 +118,8 @@ class LevelController extends AlikerController
         $startSpeed = $params['start_speed'] ?? null;
         $boostSpeed = $params['boost_speed'] ?? null;
         $blocks = $params['blocks'] ?? null;
+        $userName = $params['user_name'] ?? null;
+        $targetScore = $params['target_score'] ?? null;
         $type = $params['type'] ?? null;
 
         $level->setBlocks($blocks);
