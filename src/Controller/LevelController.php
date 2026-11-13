@@ -58,6 +58,8 @@ class LevelController extends AlikerController
         $level->setUserToken($userToken);
         $level->setBlocks($blocks);
         $level->setStartSpeed($startSpeed);
+        $level->setTargetScore($targetScore);
+        $level->setUserName($userName);
         $level->setBoostSpeed($boostSpeed);
         if ($type == 'publish') {
             $level->setStatus(Level::STATUS_MODERATION);
@@ -124,6 +126,8 @@ class LevelController extends AlikerController
 
         $level->setBlocks($blocks);
         $level->setStartSpeed($startSpeed);
+        $level->setTargetScore($targetScore);
+        $level->setUserName($userName);
         $level->setBoostSpeed($boostSpeed);
         if ($type == 'publish') {
             $level->setStatus(Level::STATUS_MODERATION);
